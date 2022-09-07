@@ -1,0 +1,41 @@
+        <v-footer
+            absolute
+            padless
+            dark
+            >
+            <v-card tile width="100%" color="rgb(39,86,139)" text-align="center" class="lighten-1 text-center">
+                <v-card-text>
+                    <v-btn href="/home" text>
+                        <img src="/static/icons/home_white.png">
+                        Home
+                    </v-btn>
+
+                    {% if user.is_authenticated %}
+                    <v-btn href="#" text>
+                        <img src="/static/icons/profile_white.png">
+                        {{ user.username }}
+                    </v-btn>
+                    <v-btn href="/logout" text>
+                        <img src="/static/icons/log_white.png">
+                        Log Out
+                    </v-btn>
+                    {% else %}
+                    <v-btn href="/login" text>
+                        <img src="/static/icons/log_white.png">
+                        Log In
+                    </v-btn>
+                    <v-btn href="/register" text>
+                        <img src="/static/icons/register_white.png">
+                        Register
+                    </v-btn>
+                    {% endif %}
+                </v-card-text>
+
+                <v-col
+                class="lighten-2 py-4 text-center white--text"
+                cols="12"
+                >
+                    [[ new Date().getFullYear() ]] — <strong>DNGV</strong>
+                </v-col>
+            </v-card>
+        </v-footer>

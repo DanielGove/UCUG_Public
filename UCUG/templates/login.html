@@ -1,0 +1,30 @@
+{% extends "header.html" %}
+
+{% block content %}
+    <v-card elevation="24" max-width="400px">
+        <v-card-title>
+            <h1>Login</h1>
+        </v-card-title>
+        
+        <v-card-text>
+            <v-form action="/login/" method="post">
+                {% csrf_token %}
+                
+                <v-text-field
+                    filled
+                    label="Username"
+                    v-model="username"
+                ></v-text-field>
+                <v-text-field
+                    filled
+                    type="password"
+                    label="Password"
+                    v-model="password"
+                ></v-text-field>
+                
+                <v-btn type="submit" color="success">Login</v-btn>
+                <v-btn href="/register" color="primary">Register</v-btn>
+            </v-form>
+        </v-card-text>
+    </v-card>
+{% endblock %}

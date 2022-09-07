@@ -1,0 +1,65 @@
+        <v-app-bar app elevation="15" fixed dark color="rgb(39,86,139)">
+            <v-spacer class="d-none d-sm-flex"></v-spacer>
+
+            <v-app-bar-nav-icon @click.stop="drawer = !drawer" class="d-flex d-sm-none"></v-app-bar-nav-icon>
+
+            <v-toolbar-title>UCUG</v-toolbar-title>
+
+            <v-spacer class="d-none d-sm-flex"></v-spacer>
+            <v-toolbar-items class="d-none d-sm-flex">
+                <v-btn href="/home" text>
+                    <img src="/static/icons/home_white.png">
+                    Home
+                </v-btn>
+                {% if user.is_authenticated %}
+                <v-btn href="#" text>
+                    <img src="/static/icons/profile_white.png">
+                    {{ user.username }}
+                </v-btn>
+                <v-btn href="/logout" text>
+                    <img src="/static/icons/log_white.png">
+                    Sign Out
+                </v-btn>
+                {% else %}
+                <v-btn href="/login" text>
+                    <img src="/static/icons/log_white.png">
+                    Log In
+                </v-btn>
+                <v-btn href="/register" text>
+                    <img src="/static/icons/register_white.png">
+                    Register
+                </v-btn>
+                {% endif %}
+            </v-toolbar-items>
+            <v-spacer></v-spacer>
+        </v-app-bar>
+
+        <v-navigation-drawer app v-model="drawer" color="rgb(39,86,139)" dark temporary>
+            <v-list nav dense>
+                <v-list-item-group v-model="group">
+                    <v-list-item href="/home" text>
+                        <img src="/static/icons/home_white.png">
+                        Home
+                    </v-list-item>
+                    {% if user.is_authenticated %}
+                    <v-list-item href="#" text>
+                        <img src="/static/icons/profile_white.png">
+                        {{ user.username }}
+                    </v-list-item>
+                    <v-list-item href="/logout" text>
+                        <img src="/static/icons/log_white.png">
+                        Sign Out
+                    </v-list-item>
+                    {% else %}
+                    <v-list-item href="/login" text>
+                        <img src="/static/icons/log_white.png">
+                        Log In
+                    </v-list-item>
+                    <v-list-item href="/register" text>
+                        <img src="/static/icons/register_white.png">
+                        Register
+                    </v-list-item>
+                    {% endif %}
+                </v-list-item-group>
+            </v-list>
+        </v-navigation-drawer>
