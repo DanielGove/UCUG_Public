@@ -2,17 +2,23 @@
 
 {% block content %}
     <v-card elevation="24" max-width="400px">
-        <v-card-title>Register</v-card-title>
-        <v-divider></v-divider>
-        <v-form action="/register/" method="post">
-            {% csrf_token %}
-            <v-card-text>
-                {{ form.as_p }}
-            </v-card-text>
-            <v-card-actions>
+        <v-card-title>
+            <h1>Register</h1>
+        </v-card-title>
+
+        <v-card-text>
+            <form action="/register/" method="post">
+                {% csrf_token %}
+                
+                {% for field in form %}
+                    <div class="form-outline mb-4">
+                        {{ field }}
+                    </div>
+                {% endfor %}
+                
                 <v-btn type="submit" color="success">Register</v-btn>
-                <v-btn align-right href="/login" color="primary">Login</v-btn>
-            </v-card-actions>
-        </v-form>
+                <v-btn href="/login" color="primary">Login</v-btn>
+            </form>
+        </v-card-text>
     </v-card>
 {% endblock %}
