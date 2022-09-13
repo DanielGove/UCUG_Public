@@ -34,7 +34,7 @@ class RegisterView(FormView):
         user_form = self.form_class(request.POST)
         if user_form.is_valid():
             user = user_form.save()
-            print("REGISTRATION FORM I  S VALID FOR NEW USER {}".format(user))
+            print("REGISTRATION FORM IS VALID FOR NEW USER {}".format(user))
             login(request, user)
             return redirect(self.success_url)
         else:
