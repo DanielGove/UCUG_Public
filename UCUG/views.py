@@ -24,10 +24,13 @@ class RegisterView(FormView):
     template_name = 'register.html'
     success_url = '/home'
 
+    error = None
+
     def get(self, request):
         record_session(request)
         return render(request, self.template_name,
-            context={'form': self.form_class()})
+            context={'form': self.form_class(),
+                    'error': self.error})
 
     def post(self, request):
         record_session(request)
@@ -37,10 +40,10 @@ class RegisterView(FormView):
             print("REGISTRATION FORM I  S VALID FOR NEW USER {}".format(user))
             login(request, user)
             return redirect(self.success_url)
-        else:
-            print("REGISTRATION FORM IS INVALID")
-            return render(request, self.template_name,
-                context={'form': self.form_class()})
+        self.error = "Registration form is invalid."
+        return render(request, self.template_name,
+                    context={'form': self.form_class(),
+                            'error': self.error})
 
     def is_valid(self, form):
         user = form.save(commit=False)
@@ -56,9 +59,11 @@ class LoginView(View):
     template_name = 'login.html'
     success_url = '/home'
 
+    error = None
+
     def get(self, request):
         record_session(request)
-        return render(request, self.template_name)    
+        return render(request, self.template_name, context={"error": self.error})    
 
     def post(self, request):
         record_session(request)
@@ -68,7 +73,8 @@ class LoginView(View):
         if user is not None:
             login(request, user)
             return HttpResponseRedirect(self.success_url)
-        return render(request, self.template_name)
+        self.error = "Username or Password is incorrect."
+        return render(request, self.template_name, context={"error": self.error})
 
 def logout_request(request):
     record_session(request)

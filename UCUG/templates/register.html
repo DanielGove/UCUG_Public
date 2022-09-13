@@ -10,6 +10,12 @@
             <form action="/register/" method="post">
                 {% csrf_token %}
                 
+                {% if error %}
+                <v-alert dense outlined type="error">
+                    {{ error }}
+                </v-alert>
+                {% endif %}
+
                 {% for field in form %}
                     <div class="form-outline mb-4">
                         {{ field }}
