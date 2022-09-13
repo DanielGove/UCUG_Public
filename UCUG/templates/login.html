@@ -10,6 +10,12 @@
             <form action="/login/" method="post">
                 {% csrf_token %}
                 
+                {% if error %}
+                    <v-alert dense outline type="error">
+                        {{ error }}
+                    </v-alert>
+                {% endif %}
+
                 <div class="form-outline mb-4">
                     <input type="text" name="username"
                     placeholder="Username" class="form-control form-control-lg" autocomplete="off">
