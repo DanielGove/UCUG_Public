@@ -1,7 +1,3 @@
 TODO:
 
-<<<<<<< HEAD
 BUILD YOUR TODO LIST HERE!
-=======
-BUILD YOUR TODO LIST HERE
->>>>>>> ucug/main
