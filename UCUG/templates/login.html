@@ -10,10 +10,12 @@
             <form action="/login/" method="post">
                 {% csrf_token %}
                 
-                {% if error %}
-                    <v-alert dense outline type="error">
-                        {{ error }}
+                {% if messages %}
+                {% for message in messages %}
+                    <v-alert dense outlined type="error">
+                        {{ message }}
                     </v-alert>
+                {% endfor %}
                 {% endif %}
 
                 <div class="form-outline mb-4">
