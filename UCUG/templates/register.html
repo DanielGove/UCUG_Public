@@ -1,7 +1,7 @@
 {% extends "header.html" %}
 
 {% block content %}
-    <v-card elevation="24" max-width="400px">
+    <v-card elevation="24" max-width="400px" class="rounded-lg">
         <v-card-title>
             <h1>Register</h1>
         </v-card-title>
@@ -24,6 +24,8 @@
                     </div>
                 {% endfor %}
                 
+                <v-divider class="mx-4"></v-divider>
+
                 <v-btn type="submit" color="success">Register</v-btn>
                 <v-btn href="/login" color="primary">Login</v-btn>
             </form>

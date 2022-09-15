@@ -1,6 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic.edit import FormView
 from django.views import View
+from .models import User
 from numpy import record
 from UCUG.models import record_session
 from .forms import RegisterForm
@@ -78,9 +79,12 @@ def logout_request(request):
     messages.info(request, "You have been logged out.")
     return redirect("/home")
 
-def RequestProfile(request):
+def RequestProfile(request, id):
     record_session(request)
+
+    profile = User.objects.get(id=id)
 
     # Show the user profile. user id is in request.id
     # if user id is the request id, let the user edit their profile.
-    return render(request=request, template_name="profile.html")
+    return render(request, template_name="profile.html",
+                context={"profile": profile})
