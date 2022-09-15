@@ -30,8 +30,12 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser):
     username = models.CharField(_('username'), max_length=64, unique=True, null=True)
-    is_superuser = models.BooleanField(_('is_superuser'), default=False)
-    is_staff = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(_('superuser'), default=False)
+    is_staff = models.BooleanField(_('staff'), default=False)
+
+    description = models.CharField(_('description'), max_length=255,
+                                    default="")
+    profile_picture = models.ImageField(_('picture'), upload_to="uploaded")
 
     joined = models.DateTimeField(_('joined'), auto_now_add=True)
     last_active = models.DateTimeField(_('last_active'), auto_now=True)

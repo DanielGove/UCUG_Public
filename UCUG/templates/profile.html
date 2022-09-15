@@ -14,6 +14,32 @@
     Might use vuetify virtual scroll for long bios.
     -->
 
-
+    <v-card elevation="24" max-width="360px" height="250px" class="rounded-lg">
+        <!-- Contains profile picture, name, and description -->
+        <v-list-item>
+            <v-list-item-avatar size="84">
+                {% if profile.profile_image %}
+                <v-img src="user.profile_image.url">
+                {% else %}
+                <v-img src="/static/icons/nft.png">
+                {% endif %}
+            </v-list-item-avatar>
+            <v-list-item-content>
+                <v-list-item-title class="text-h5 mb-1">
+                    {{ profile.username }}
+                </v-list-item-title>
+                <v-list-item-subtitle>
+                    Joined {{ profile.joined|date:"M d, Y" }}
+                </v-list-item-subtitle>
+            </v-list-item-content>
+        </v-list-item>
+        <v-list-item>
+            {% if user.description %}
+            {{ user.description }}
+            {% else %}
+            No description provided.
+            {% endif %}
+        </v-list-item>
+    </v-card>
 
 {% endblock %}

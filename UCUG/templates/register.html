@@ -1,7 +1,7 @@
 {% extends "header.html" %}
 
 {% block content %}
-    <v-card elevation="24" max-width="400px">
+    <v-card elevation="24" max-width="400px" class="rounded-lg">
         <v-card-title>
             <h1>Register</h1>
         </v-card-title>
@@ -10,11 +10,13 @@
             <form action="/register/" method="post">
                 {% csrf_token %}
                 
-                {% if error %}
-                <v-alert dense outlined type="error">
-                    {{ error }}
-                </v-alert>
-                {% endif %}
+                {% for field in form %}
+                    {% for error in field.errors %}
+                    <v-alert dense outlined type="error">
+                        {{ error }}
+                    </v-alert>
+                    {% endfor %}
+                {% endfor %}
 
                 {% for field in form %}
                     <div class="form-outline mb-4">
@@ -22,6 +24,8 @@
                     </div>
                 {% endfor %}
                 
+                <v-divider class="mx-4"></v-divider>
+
                 <v-btn type="submit" color="success">Register</v-btn>
                 <v-btn href="/login" color="primary">Login</v-btn>
             </form>

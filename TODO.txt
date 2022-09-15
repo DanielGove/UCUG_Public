@@ -1,0 +1,2 @@
+
+Write detailed error message for registration when there is an invalid password, taken username, etc.
