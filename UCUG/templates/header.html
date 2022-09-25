@@ -17,6 +17,7 @@
         <!-- Vuetify -->
         <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
         <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
 
         <!-- Axios JS -->
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -52,10 +53,35 @@
                 el: '#app',
                 vuetify: new Vuetify(),
                 delimiters: ['[[', ']]'],
+                icons: {
+                    iconfont: 'mdiSvg'
+                },
                 data: () => ({
+                    // Navigation drawer which can be toggled for small screens
                     drawer: false,
-                    group:null,
+                    // Group ???
+                    group: null,
+
+                    profile_image_form: false,
+                    profile_picture: null,
+                    profile_description_form: false,
+                    profile_description: null,
                 }),
+                methods: {
+                    profile_image(event) {
+                        this.profile_image_form = !this.profile_image_form
+                    },
+                    upload_image(event) {
+                        this.profile_image_form = false
+                    },
+                    profile_description(event) {
+                        alert("Penis")
+                        this.profile_description_form = !this.profile_description_form
+                    },
+                    upload_description(event) {
+                        this.profile_description_form = false
+                    },
+                },
                 watch: {
                     group () {
                         this.drawer = false

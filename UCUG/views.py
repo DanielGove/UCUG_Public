@@ -1,3 +1,4 @@
+from re import template
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic.edit import FormView
 from django.views import View
@@ -18,7 +19,7 @@ def index(request):
 
 def home(request):
     record_session(request)
-    return render(request=request, template_name="header.html")
+    return render(request=request, template_name="home.html")
 
 class RegisterView(FormView):
     form_class = RegisterForm
@@ -79,10 +80,13 @@ def logout_request(request):
     messages.info(request, "You have been logged out.")
     return redirect("/home")
 
-def RequestProfile(request, id):
+def RequestProfile(request, name):
     record_session(request)
 
-    profile = User.objects.get(id=id)
+    try:
+        profile = User.objects.get(username=name)
+    except:
+        return render(request, template_name="invalid_profile.html")
 
     # Show the user profile. user id is in request.id
     # if user id is the request id, let the user edit their profile.

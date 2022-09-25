@@ -12,7 +12,7 @@
                     Home
                 </v-btn>
                 {% if user.is_authenticated %}
-                <v-btn href="/profile/{{ user.id }}" text>
+                <v-btn href="/profile/{{ user.username }}" text>
                     <img src="/static/icons/profile_white.png">
                     {{ user.username }}
                 </v-btn>
@@ -42,7 +42,7 @@
                         Home
                     </v-list-item>
                     {% if user.is_authenticated %}
-                    <v-list-item href="#" text>
+                    <v-list-item href="/profile/{{ user.username }}" text>
                         <img src="/static/icons/profile_white.png">
                         {{ user.username }}
                     </v-list-item>

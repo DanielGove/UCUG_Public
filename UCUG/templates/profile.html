@@ -13,16 +13,14 @@
 
     Might use vuetify virtual scroll for long bios.
     -->
+    <v-row>
+    <v-col cols="12">
 
-    <v-card elevation="24" max-width="360px" height="250px" class="rounded-lg">
+    <v-card elevation="12" max-width="360px" height="250px" class="rounded-lg">
         <!-- Contains profile picture, name, and description -->
         <v-list-item>
             <v-list-item-avatar size="84">
-                {% if profile.profile_image %}
-                <v-img src="user.profile_image.url">
-                {% else %}
-                <v-img src="/static/icons/nft.png">
-                {% endif %}
+                <v-img src="{{ profile.profile_picture.url }}">
             </v-list-item-avatar>
             <v-list-item-content>
                 <v-list-item-title class="text-h5 mb-1">
@@ -32,6 +30,15 @@
                     Joined {{ profile.joined|date:"M d, Y" }}
                 </v-list-item-subtitle>
             </v-list-item-content>
+            {% if profile.is_superuser %}
+            <v-chip color="orange" text-color="white">
+                <v-icon left>mdi-shield-star</v-icon>Admin
+            </v-chip>
+            {% elif profile.is_staff %}
+            <v-chip color="success" text-color="white">
+                <v-icon left>mdi-shield-account</v-icon>Mod
+            </v-chip>
+            {% endif %}
         </v-list-item>
         <v-list-item>
             {% if user.description %}
@@ -41,5 +48,47 @@
             {% endif %}
         </v-list-item>
     </v-card>
+    </v-col>
+
+    {% if user == profile %}
+    <v-col cols="12">
+    <v-card elevation="12" max-width="360px" min-height="40px" class="rounded-lg">
+    <v-card-actions>
+        <v-btn color="info" @click="profile_description">
+            <v-icon left>mdi-pencil</v-icon>Edit
+        </v-btn>
+        <v-spacer></v-spacer>
+        <v-btn color="info" @click="profile_image">
+            <v-icon left>mdi-image</v-icon>Change
+        </v-btn>
+    </v-card-actions>
+
+    <v-card-text v-if="profile_image_form">
+        <v-form>
+            <v-file-input required
+                        v-model="profile_picture"
+                        accept="image/*"
+                        label="Profile Picture"
+                        prepend-icon="mdi-image"></v-file-input>
+        </v-form>
+        <v-btn color="success" @click="upload_image">Upload</v-btn>
+    </v-card-text>
+
+    <v-card-text v-if="profile_description_form">
+        <v-form>
+            <v-file-input required
+                        v-model="profile_picture"
+                        accept="text/*"
+                        label="Profile Description"
+                        prepend-icon="mdi-pencil"></v-file-input>
+        </v-form>
+        <v-btn color="success" @click="upload_description">Upload</v-btn>
+    </v-card-text>
+
+    </v-card>
+    </v-col>
+    {% endif %}
+
+    </v-row>
 
 {% endblock %}

@@ -28,14 +28,15 @@ class UserManager(BaseUserManager):
             raise ValueError('Superuser must have is_staff=True')
         return self.create_user(username, password, **other)
 
-class User(AbstractBaseUser):
+class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(_('username'), max_length=64, unique=True, null=True)
     is_superuser = models.BooleanField(_('superuser'), default=False)
     is_staff = models.BooleanField(_('staff'), default=False)
 
-    description = models.CharField(_('description'), max_length=255,
-                                    default="")
-    profile_picture = models.ImageField(_('picture'), upload_to="uploaded")
+    description = models.CharField(_('description'), max_length=255, 
+                                    default='', blank=True)
+    profile_picture = models.ImageField(_('picture'), default="default.png",
+                                        upload_to="profile_pics", blank=True)
 
     joined = models.DateTimeField(_('joined'), auto_now_add=True)
     last_active = models.DateTimeField(_('last_active'), auto_now=True)
@@ -65,6 +66,11 @@ class Forum(models.Model):
     def __str__(self):
         return self.title
 
+class Announcement(models.Model):
+    title = models.CharField(max_length=64, null=True)
+    content = models.TextField()
+
+    created_UTC = models.DateTimeField(auto_now_add=True)
 
 class Post(models.Model):
     title = models.CharField(max_length=64, default="Null")
