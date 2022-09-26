@@ -1,18 +1,13 @@
-from re import template
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic.edit import FormView
 from django.views import View
 from .models import User
-from numpy import record
 from UCUG.models import record_session
 from .forms import RegisterForm
-from .settings import BASE_DIR
-import os
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.shortcuts import render, redirect
 import json
-from PIL import Image
 
 # This is the index "view"
 # In order for a user to see this view, it must be mapped
@@ -117,7 +112,7 @@ def update_profile_image(request):
         image = request.FILES.get("image")
 
         user = User.objects.get(username=request.user.username)
-        
+
         if image:
             user.profile_picture = image
         else:
