@@ -16,7 +16,7 @@
     <v-row>
     <v-col cols="12">
 
-    <v-card elevation="12" max-width="360px" height="250px" class="rounded-lg">
+    <v-card elevation="12" max-width="360px" min-height="250px" class="rounded-lg">
         <!-- Contains profile picture, name, and description -->
         <v-list-item>
             <v-list-item-avatar size="84">
@@ -40,7 +40,7 @@
             </v-chip>
             {% endif %}
         </v-list-item>
-        <v-list-item>
+        <v-list-item class="text-break">
             [[ profile_description ]]
         </v-list-item>
     </v-card>
@@ -73,8 +73,8 @@
     </v-card-text>
 
     <v-card-text v-if="profile_description_form">
-        <v-form>
-            <v-textarea
+        <v-form v-model="description_valid">
+            <v-textarea :rules="description_rules"
                         v-model="profile_description_input"
                         label="Profile Description"
                         prepend-icon="mdi-pencil"></v-textarea>

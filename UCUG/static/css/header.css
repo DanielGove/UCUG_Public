@@ -3,3 +3,7 @@
 
     background-color: rgb(247,247,255);
 }
+
+.pre-formatted {
+    white-space: pre;
+}
