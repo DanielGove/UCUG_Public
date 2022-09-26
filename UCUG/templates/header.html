@@ -63,23 +63,50 @@
                     group: null,
 
                     profile_image_form: false,
-                    profile_picture: null,
+                    profile_image: "{{ profile.profile_picture.url }}",
+                    profile_image_input: null,
+
                     profile_description_form: false,
-                    profile_description: null,
+                    profile_description: "{{ profile.description }}",
+                    profile_description_input: "",
                 }),
                 methods: {
-                    profile_image(event) {
+                    toggle_image_form(event) {
                         this.profile_image_form = !this.profile_image_form
                     },
                     upload_image(event) {
-                        this.profile_image_form = false
+                        let data = new FormData();
+
+                        console.log(this.profile_image_input)
+
+                        data.append("image", this.profile_image_input)
+                        data.append("csrfmiddlewaretoken", "{{ csrf_token }}")
+
+                        console.log(data["csrfmiddlewaretoken"])
+
+                        axios.post("{% url 'profile_image' %}", data)
+                            .then(res => {this.profile_image = res.data;
+                                        this.profile_image_input = null;
+                                        this.profile_image_form = false;})
+                            .catch(err => console.log(err))
                     },
-                    profile_description(event) {
-                        alert("Penis")
+                    getImagePath() {
+                        return this.profile_image;
+                    },
+                    toggle_description_form(event) {
                         this.profile_description_form = !this.profile_description_form
                     },
                     upload_description(event) {
-                        this.profile_description_form = false
+                        let data = new FormData();
+
+                        data.append("description", this.profile_description_input)
+                        data.append("csrfmiddlewaretoken", "{{ csrf_token }}")
+
+                        axios.post("{% url 'profile_description' %}", data)
+                            .then(res => {this.profile_description = res.data;
+                                        this.profile_description_input = null;
+                                        this.profile_description_form = false;})
+                            .catch(err => console.log(err))
                     },
                 },
                 watch: {

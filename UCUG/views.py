@@ -9,6 +9,7 @@ from .forms import RegisterForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.shortcuts import render, redirect
+import json
 
 # This is the index "view"
 # In order for a user to see this view, it must be mapped
@@ -92,3 +93,28 @@ def RequestProfile(request, name):
     # if user id is the request id, let the user edit their profile.
     return render(request, template_name="profile.html",
                 context={"profile": profile})
+
+def update_profile_description(request):
+    if request.method == "POST":
+        description = request.POST.get("description")
+
+        # Update the profile decription of the user who made the request.
+        user = User.objects.get(username=request.user.username)
+        user.description = description 
+
+        if not description:
+            user.description = "No description provided."
+
+        user.save()
+
+        return HttpResponse(user.description)
+
+def update_profile_image(request):
+    if request.method == "POST":
+        image = request.POST.get("image")
+        print(request.POST)
+        print(image)
+
+        user = User.objects.get(username=request.user.username)
+
+        return HttpResponse(user.profile_picture.url)

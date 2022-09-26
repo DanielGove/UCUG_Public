@@ -28,5 +28,8 @@ urlpatterns = [
     path('register/', views.RegisterView.as_view(), name='register'),
     path('profile/<str:name>/', views.RequestProfile, name='profile'),
     
+    path('profile_description/', views.update_profile_description, name="profile_description"),
+    path('profile_image/', views.update_profile_image, name="profile_image"),
+
     path('admin/', admin.site.urls, name='admin'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
