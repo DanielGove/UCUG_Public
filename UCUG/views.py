@@ -115,7 +115,10 @@ def update_profile_image(request):
 
 
         user = User.objects.get(username=request.user.username)
-        user.profile_picture = image
+        if image:
+            user.profile_picture = image
+        else:
+            user.profile_picture = "default.png"
         user.save()
 
         return HttpResponse(user.profile_picture.url)
