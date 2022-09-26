@@ -111,10 +111,11 @@ def update_profile_description(request):
 
 def update_profile_image(request):
     if request.method == "POST":
-        image = request.POST.get("image")
-        print(request.POST)
-        print(image)
+        image = request.FILES.get("image")
+
 
         user = User.objects.get(username=request.user.username)
+        user.profile_picture = image
+        user.save()
 
         return HttpResponse(user.profile_picture.url)

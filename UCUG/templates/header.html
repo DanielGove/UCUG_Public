@@ -74,21 +74,23 @@
                     toggle_image_form(event) {
                         this.profile_image_form = !this.profile_image_form
                     },
-                    upload_image(event) {
+                    upload_image() {
                         let data = new FormData();
 
-                        console.log(this.profile_image_input)
-
                         data.append("image", this.profile_image_input)
-                        data.append("csrfmiddlewaretoken", "{{ csrf_token }}")
-
-                        console.log(data["csrfmiddlewaretoken"])
-
-                        axios.post("{% url 'profile_image' %}", data)
-                            .then(res => {this.profile_image = res.data;
-                                        this.profile_image_input = null;
-                                        this.profile_image_form = false;})
-                            .catch(err => console.log(err))
+                        
+                        axios.post("{% url  'profile_image' %}", data, {
+                            headers: {
+                                "Content-Type": "multipart/form-data",
+                                "X-CSRFToken": "{{ csrf_token }}"
+                            }
+                        })
+                        .then(res => {
+                            this.profile_image = res.data;
+                            this.profile_image_input = null;
+                            this.profile_image_form = false;
+                        })
+                        .catch(err => console.log(err))
                     },
                     getImagePath() {
                         return this.profile_image;
