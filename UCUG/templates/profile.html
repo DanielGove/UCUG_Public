@@ -60,8 +60,10 @@
     </v-card-actions>
 
     <v-card-text v-if="profile_image_form">
-        <v-form>
-            <v-file-input required
+        <v-form v-model="image_valid">
+            <v-file-input show-size
+                        ref="profile_pic"
+                        :rules="image_rules"
                         v-model="profile_image_input"
                         accept="image/*"
                         label="Profile Picture"
@@ -72,7 +74,7 @@
 
     <v-card-text v-if="profile_description_form">
         <v-form>
-            <v-textarea required
+            <v-textarea
                         v-model="profile_description_input"
                         label="Profile Description"
                         prepend-icon="mdi-pencil"></v-textarea>

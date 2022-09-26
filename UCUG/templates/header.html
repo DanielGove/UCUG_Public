@@ -62,9 +62,13 @@
                     // Group ???
                     group: null,
 
+                    image_valid: false,
                     profile_image_form: false,
                     profile_image: "{{ profile.profile_picture.url }}",
                     profile_image_input: null,
+                    image_rules: [
+                        value => !value || value.size < 1000000 || 'Image size needs to be less than 1 MB!',
+                    ],
 
                     profile_description_form: false,
                     profile_description: "{{ profile.description }}",
@@ -75,8 +79,11 @@
                         this.profile_image_form = !this.profile_image_form
                     },
                     upload_image() {
-                        let data = new FormData();
+                        if (!this.image_valid) {
+                            return false
+                        }
 
+                        let data = new FormData();
                         data.append("image", this.profile_image_input)
                         
                         axios.post("{% url  'profile_image' %}", data, {
@@ -100,6 +107,11 @@
                     },
                     upload_description(event) {
                         let data = new FormData();
+
+                        if (this.$refs.profile_pic.hasError) {
+                            alert("BAD")
+                            return false
+                        }
 
                         data.append("description", this.profile_description_input)
                         data.append("csrfmiddlewaretoken", "{{ csrf_token }}")
