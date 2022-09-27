@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import User
+from ucug_auth.models import User
 
 from datetime import datetime
 

@@ -61,71 +61,7 @@
                     drawer: false,
                     // Group ???
                     group: null,
-
-                    image_valid: false,
-                    profile_image_form: false,
-                    profile_image: "{{ profile.profile_picture.url|escapejs }}",
-                    profile_image_input: null,
-                    image_rules: [
-                        value => !value || value.size < 1000000 || 'Image size needs to be less than 1 MB!',
-                    ],
-
-                    description_valid: false,
-                    profile_description_form: false,
-                    profile_description: "{{ profile.description|escapejs }}",
-                    profile_description_input: "",
-                    description_rules: [
-                        value => (value || '').length <= 255 || 'Description must be 255 characters or less!',
-                    ],
                 }),
-                methods: {
-                    toggle_image_form(event) {
-                        this.profile_image_form = !this.profile_image_form
-                    },
-                    upload_image() {
-                        if (!this.image_valid) {
-                            return false
-                        }
-
-                        let data = new FormData();
-                        data.append("image", this.profile_image_input)
-                        
-                        axios.post("{% url  'profile_image' %}", data, {
-                            headers: {
-                                "Content-Type": "multipart/form-data",
-                                "X-CSRFToken": "{{ csrf_token }}"
-                            }
-                        })
-                        .then(res => {
-                            this.profile_image = res.data;
-                            this.profile_image_input = null;
-                            this.profile_image_form = false;
-                        })
-                        .catch(err => console.log(err))
-                    },
-                    getImagePath() {
-                        return this.profile_image;
-                    },
-                    toggle_description_form(event) {
-                        this.profile_description_form = !this.profile_description_form
-                    },
-                    upload_description() {
-                        if (!this.description_valid) {
-                            return false
-                        }
-
-                        let data = new FormData();
-
-                        data.append("description", this.profile_description_input)
-                        data.append("csrfmiddlewaretoken", "{{ csrf_token }}")
-
-                        axios.post("{% url 'profile_description' %}", data)
-                            .then(res => {this.profile_description = res.data;
-                                        this.profile_description_input = null;
-                                        this.profile_description_form = false;})
-                            .catch(err => console.log(err))
-                    },
-                },
                 watch: {
                     group () {
                         this.drawer = false
