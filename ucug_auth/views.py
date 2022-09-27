@@ -65,7 +65,6 @@ def logout_request(request):
     record_session(request)
 
     logout(request)
-    messages.info(request, "You have been logged out.")
     return redirect("/home")
 
 def RequestProfile(request, name):
