@@ -17,13 +17,15 @@
     </v-btn>
     {% endif %}
 </v-row>
+{% endif %}
 
 <!-- Display announcement or forum creation forms here -->
 <v-row v-if="announcement_form">
     <v-card width="100%"
             class="ma-2"
             elevation=6
-            outlined>
+            outlined
+            style="border-left: 8px solid rgb(39,86,139)">
         <v-card-title>Create an Announcement</v-card-title>
 
         <!-- The Form -->
@@ -35,8 +37,7 @@
                             :rules="title_rules"></v-text-field>
                 <v-textarea v-model="create_announcement_content"
                             label="Content"
-                            placeholder="Content"
-                            :rules="content_rules"></v-textarea>
+                            placeholder="Content"></v-textarea>
             </v-form>
         </v-card-text>
 
@@ -46,11 +47,22 @@
         </v-card-actions>
     </v-card>
 </v-row>
+
+<!-- Are there any announcements? -->
+<div id="announcement_list">
+{% for announcement in announcements %}
+    {% include "announcement.html" with announcement=announcement %}
+{% endfor %}
+</div>
+
+<v-divider></v-divider>
+<!-- New forum form -->
 <v-row v-if="forum_form">
     <v-card width="100%"
             class="ma-2"
             elevation=6
-            outlined>
+            outlined
+            style="border-left: 8px solid rgb(39,86,139)">
         <v-card-title>Create a Forum</v-card-title>
 
         <!-- The Form -->
@@ -75,80 +87,50 @@
     </v-card>
 </v-row>
 
-{% endif %}
 
-<!-- Are there any announcements? -->
-{% for announcement in announcements %}
-<v-row>
+<!-- Search bar to filter forums -->
+
+<!-- Display each forum -->
+{% for forum in forums %}
+<v-row id="forum{{ forum.id }}">
+    <v-hover v-slot="{ hover }"/>
     <v-card outlined
             width="100%"
-            elevation=6
-            class="ma-2 rounded-lg">
+            :elevation="hover ? 12 : 6"
+            class="ma-2 rounded-lg"
+            href="/profile/CAT"
+            style="text-decoration: none;
+                    border-left: 8px solid rgb(39,86,139)">
         <v-card-title>
-            {{ announcement.title }}
+            {{ forum.title }}
             <v-spacer></v-spacer>
-            <!-- Author Tag -->
-            {% if announcement.author %}
-                {% if announcement.author.is_superuser %}
-                <v-chip href="/profile/{{ announcement.author.username }}" color="orange" text-color="white">
-                    <v-icon left>mdi-shield-star</v-icon>{{ announcement.author.username }}
+            <!-- Owner Tag -->
+            {% if forum.owner %}
+                {% if forum.owner.is_superuser %}
+                <v-chip href="/profile/{{ forum.owner.username }}" color="orange" text-color="white">
+                    <v-icon left>mdi-shield-star</v-icon>{{ forum.owner.username }}
                 </v-chip>
-                {% elif announcement.author.is_staff %}
-                <v-chip href="/profile/{{ announcement.author.username }}" color="success" text-color="white">
-                    <v-icon left>mdi-shield-account</v-icon>{{ announcement.author.username }}
+                {% elif forum.owner.is_staff %}
+                <v-chip href="/profile/{{ forum.owner.username }}" color="success" text-color="white">
+                    <v-icon left>mdi-shield-account</v-icon>{{ forum.owner.username }}
                 </v-chip>
                 {% else %}
-                <v-chip href="/profile/{{ announcement.author.username }}" color="info" text-color="white">
-                    <v-icon left>mdi-account</v-icon>{{ announcement.author.username }}
+                <v-chip href="/profile/{{ forum.owner.username }}" color="info" text-color="white">
+                    <v-icon left>mdi-account</v-icon>{{ forum.owner.username }}
                 </v-chip>
                 {% endif %}
             {% endif %}
         </v-card-title>
 
         <v-card-text>
-            {{ announcement.content }}
-        </v-card-text>
-    </v-card>
-</v-row>
-{% endfor %}
-
-<v-divider></v-divider>
-<!-- Search bar to filter forums -->
-
-<!-- Display each forum -->
-{% for forum in forums %}
-<v-row>
-    <v-hover v-slot="{ hover }"/>
-    <v-card outlined
-            width="100%"
-            :elevation="hover ? 12 : 6"
-            class="ma-2 rounded-lg"
-            href="/profile/DNGV"
-            style="text-decoration: none">
-        <v-card-title>
-            {{ forum.title }}
-            <v-spacer></v-spacer>
-            <!-- Owner Tag -->
-            {% if forum.owner %}
-                        {% if forum.owner.is_superuser %}
-                        <v-chip href="/profile/{{ forum.owner.username }}" color="orange" text-color="white">
-                            <v-icon left>mdi-shield-star</v-icon>{{ forum.owner.username }}
-                        </v-chip>
-                        {% elif forum.owner.is_staff %}
-                        <v-chip href="/profile/{{ forum.owner.username }}" color="success" text-color="white">
-                            <v-icon left>mdi-shield-account</v-icon>{{ forum.owner.username }}
-                        </v-chip>
-                        {% else %}
-                        <v-chip href="/profile/{{ forum.owner.username }}" color="info" text-color="white">
-                            <v-icon left>mdi-account</v-icon>{{ forum.owner.username }}
-                        </v-chip>
-                        {% endif %}
-                    {% endif %}
-        </v-card-title>
-
-        <v-card-text>
             {{ forum.description }}
         </v-card-text>
+
+        {% if perms.UCUG.change_forum %}
+        <v-card-actions>
+            <v-btn small class="mx-1" fab color="info"><v-icon>mdi-pencil</v-icon></v-btn>
+        </v-card-actions>
+        {% endif %}
     </v-card>
 </v-row>
 {% endfor %}

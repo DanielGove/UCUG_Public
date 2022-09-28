@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 
 from UCUG.models import record_session
@@ -23,7 +23,14 @@ def create_announcement(request):
                                 author=request.user)
     announcement.save()
 
-    return HttpResponse("Hello")
+    return redirect("/home")
+
+def delete_announcement(request, id):
+    if not request.user.has_perm("delete_announcement"): return HttpResponse("Nice try!")
+
+    announcement = Announcement.objects.get(id=id)
+    announcement.delete()
+    return HttpResponse("Sucessfully deleted announcement {}".format(id))
 
 def create_forum(request):
     # Check if the user can make forums

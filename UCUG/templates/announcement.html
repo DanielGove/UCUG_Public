@@ -1,0 +1,39 @@
+<v-row id="announcement{{announcement.id}}">
+    <v-card outlined
+            width="100%"
+            elevation=6
+            class="ma-2 rounded-lg"
+            style="border-left: 8px solid rgb(39,86,139)">
+        <v-card-title>
+            {{ announcement.title }}
+            <v-spacer></v-spacer>
+            <!-- Author Tag -->
+            {% if announcement.author %}
+                {% if announcement.author.is_superuser %}
+                <v-chip href="/profile/{{ announcement.author.username }}" color="orange" text-color="white">
+                    <v-icon left>mdi-shield-star</v-icon>{{ announcement.author.username }}
+                </v-chip>
+                {% elif announcement.author.is_staff %}
+                <v-chip href="/profile/{{ announcement.author.username }}" color="success" text-color="white">
+                    <v-icon left>mdi-shield-account</v-icon>{{ announcement.author.username }}
+                </v-chip>
+                {% else %}
+                <v-chip href="/profile/{{ announcement.author.username }}" color="info" text-color="white">
+                    <v-icon left>mdi-account</v-icon>{{ announcement.author.username }}
+                </v-chip>
+                {% endif %}
+            {% endif %}
+        </v-card-title>
+
+        <v-card-text>
+            {{ announcement.content }}
+        </v-card-text>
+
+        {% if perms.UCUG.change_announcement %}
+        <v-card-actions>
+            <v-btn small class="mx-1" fab color="info"><v-icon>mdi-pencil</v-icon></v-btn>
+            <v-btn v-on:click="delete_announcement({{ announcement.id }})" small class="mx-1" fab color="error"><v-icon>mdi-delete</v-icon></v-btn>
+        </v-card-actions>
+        {% endif %}
+    </v-card>
+</v-row>

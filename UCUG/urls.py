@@ -25,5 +25,7 @@ urlpatterns = [
     path('create_announcement/', views.create_announcement, name='create_announcement'),
     path('create_forum/', views.create_forum, name='create_forum'),
 
+    path('delete_announcement/<int:id>', views.delete_announcement),
+
     path('', include('ucug_auth.urls')),
 ]

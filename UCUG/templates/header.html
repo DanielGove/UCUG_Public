@@ -37,10 +37,10 @@
                 <v-container fluid>
                     <v-row>
                         <v-col cols="1" xs="1" sm="3" md="2" lg="3"></v-col>
-                        <v-col xs="10" sm="9" md="8" lg="6">
+                        <v-col xs="10" sm="9" md="7" lg="5">
                             {% block content %}{% endblock %}
                         </v-col>
-                        <v-col cols="1" xs="1" sm="0" md="2" lg="3"></v-col>
+                        <v-col cols="1" xs="1" sm="0" md="3" lg="4"></v-col>
                     </v-row>
                 </v-container>
             </v-main>
@@ -69,7 +69,7 @@
                     content_rules: [
                         content => (content || '').length <= 256 || "The content can't be longer than 256 characters!",
                     ],
-
+                    
                     announcement_form: false,
                     announcement_valid: false,
                     create_announcement_title: "",
@@ -101,7 +101,21 @@
                             .catch(err => console.log(err))
                     },
                     render_announcement(announcement) {
+                        
+                    },
+                    delete_announcement(id) {
+                        // Remove it from the webpage
+                        announcement = document.getElementById("announcement" + id)
+                        announcement.remove()
 
+                        // Remove it from the database
+                        axios.delete("/delete_announcement/" + id, {
+                                headers: {
+                                    "X-CSRFTOKEN": "{{ csrf_token }}"
+                                }
+                            })
+                            .then(res => console.log(res))
+                            .catch(err => console.log(err))
                     },
 
                     toggle_forum_form() {
