@@ -22,5 +22,8 @@ urlpatterns = [
     path('home/', views.home, name='home'),
     path('admin/', admin.site.urls, name='admin'),
 
+    path('create_announcement/', views.create_announcement, name='create_announcement'),
+    path('create_forum/', views.create_forum, name='create_forum'),
+
     path('', include('ucug_auth.urls')),
 ]

@@ -61,7 +61,72 @@
                     drawer: false,
                     // Group ???
                     group: null,
+
+                    title_rules: [
+                        title => !!title || "You must have a title!",
+                        title => (title || '').length <= 64 || "The title can't be longer than 64 characters!",
+                    ],
+                    content_rules: [
+                        content => (content || '').length <= 256 || "The content can't be longer than 256 characters!",
+                    ],
+
+                    announcement_form: false,
+                    announcement_valid: false,
+                    create_announcement_title: "",
+                    create_announcement_content: "",
+
+                    forum_form: false,
+                    forum_valid: false,
+                    create_forum_title: "",
+                    create_forum_description: "",
                 }),
+                methods: {
+                    toggle_announcement_form() {
+                        this.announcement_form = !this.announcement_form
+                        this.forum_form = false
+                    },
+                    create_announcement() {
+                        if (!this.announcement_valid) {return false}
+
+                        let data = new FormData()
+                        data.append("title", this.create_announcement_title)
+                        data.append("content", this.create_announcement_content)
+                        data.append("csrfmiddlewaretoken", '{{ csrf_token }}')
+
+                        axios.post("{% url 'create_announcement' %}", data)
+                            .then(res => {this.announcement_form = false;
+                                        this.create_announcement_title = "";
+                                        this.create_announcement_content = "";
+                                        this.render_announcement(res);})
+                            .catch(err => console.log(err))
+                    },
+                    render_announcement(announcement) {
+
+                    },
+
+                    toggle_forum_form() {
+                        this.forum_form = !this.forum_form
+                        this.announcement_form = false
+                    },
+                    create_forum() {
+                        if (!this.forum_valid) {return false}
+
+                        let data = new FormData()
+                        data.append("title", this.create_forum_title)
+                        data.append("description", this.create_forum_description)
+                        data.append("csrfmiddlewaretoken", '{{ csrf_token }}')
+
+                        axios.post("{% url 'create_forum' %}", data)
+                            .then(res => {this.forum_form = false;
+                                        this.create_forum_title = "";
+                                        this.create_forum_description = "";
+                                        this.render_forum(res);})
+                            .catch(err => console.log(err))
+                    },
+                    render_forum(forum) {
+
+                    },
+                },
                 watch: {
                     group () {
                         this.drawer = false

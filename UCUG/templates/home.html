@@ -4,23 +4,153 @@
 
 <!-- Provide edit functionality for superusers -->
 {% if perms.UCUG.add_announcement or perms.UCUG.add_forum %}
+<v-row justify="end">
     {% if perms.UCUG.add_announcement %}
-        Add Announcements    
+    <v-btn @click="toggle_announcement_form" color="info" class="ma-2" elevation=6>
+        <v-icon left>mdi-pencil</v-icon>Announcement
+    </v-btn>
     {% endif %}
 
     {% if perms.UCUG.add_forum %}
-        Add Forums
+    <v-btn @click="toggle_forum_form" color="info" class="ma-2" elevation=6>
+        <v-icon left>mdi-pencil</v-icon>Forum
+    </v-btn>
     {% endif %}
+</v-row>
+
+<!-- Display announcement or forum creation forms here -->
+<v-row v-if="announcement_form">
+    <v-card width="100%"
+            class="ma-2"
+            elevation=6
+            outlined>
+        <v-card-title>Create an Announcement</v-card-title>
+
+        <!-- The Form -->
+        <v-card-text class="pb-0">
+            <v-form v-model="announcement_valid">
+                <v-text-field v-model="create_announcement_title"
+                            label="Title"
+                            placeholder="Title"
+                            :rules="title_rules"></v-text-field>
+                <v-textarea v-model="create_announcement_content"
+                            label="Content"
+                            placeholder="Content"
+                            :rules="content_rules"></v-textarea>
+            </v-form>
+        </v-card-text>
+
+        <v-card-actions class="pt-0">
+            <v-spacer></v-spacer>
+            <v-btn @click="create_announcement" color="success">Create</v-btn>
+        </v-card-actions>
+    </v-card>
+</v-row>
+<v-row v-if="forum_form">
+    <v-card width="100%"
+            class="ma-2"
+            elevation=6
+            outlined>
+        <v-card-title>Create a Forum</v-card-title>
+
+        <!-- The Form -->
+        <v-card-text class="pb-0">
+            <v-form v-model="forum_valid">
+                <v-text-field v-model="create_forum_title"
+                            label="Title"
+                            placeholder="Title"
+                            :rules="title_rules"></v-text-field>
+
+                <v-textarea v-model="create_forum_description"
+                            label="Description"
+                            placeholder="Description"
+                            :rules="content_rules"></v-textarea>
+            </v-form>
+        </v-card-text>
+
+        <v-card-actions class="pt-0">
+            <v-spacer></v-spacer>
+            <v-btn @click="create_forum" color="success">Create</v-btn>
+        </v-card-actions>
+    </v-card>
+</v-row>
+
 {% endif %}
 
 <!-- Are there any announcements? -->
 {% for announcement in announcements %}
-    Announcement
+<v-row>
+    <v-card outlined
+            width="100%"
+            elevation=6
+            class="ma-2 rounded-lg">
+        <v-card-title>
+            {{ announcement.title }}
+            <v-spacer></v-spacer>
+            <!-- Author Tag -->
+            {% if announcement.author %}
+                {% if announcement.author.is_superuser %}
+                <v-chip href="/profile/{{ announcement.author.username }}" color="orange" text-color="white">
+                    <v-icon left>mdi-shield-star</v-icon>{{ announcement.author.username }}
+                </v-chip>
+                {% elif announcement.author.is_staff %}
+                <v-chip href="/profile/{{ announcement.author.username }}" color="success" text-color="white">
+                    <v-icon left>mdi-shield-account</v-icon>{{ announcement.author.username }}
+                </v-chip>
+                {% else %}
+                <v-chip href="/profile/{{ announcement.author.username }}" color="info" text-color="white">
+                    <v-icon left>mdi-account</v-icon>{{ announcement.author.username }}
+                </v-chip>
+                {% endif %}
+            {% endif %}
+        </v-card-title>
+
+        <v-card-text>
+            {{ announcement.content }}
+        </v-card-text>
+    </v-card>
+</v-row>
 {% endfor %}
+
+<v-divider></v-divider>
+<!-- Search bar to filter forums -->
 
 <!-- Display each forum -->
 {% for forum in forums %}
-    Forum
+<v-row>
+    <v-hover v-slot="{ hover }"/>
+    <v-card outlined
+            width="100%"
+            :elevation="hover ? 12 : 6"
+            class="ma-2 rounded-lg"
+            href="/profile/DNGV"
+            style="text-decoration: none">
+        <v-card-title>
+            {{ forum.title }}
+            <v-spacer></v-spacer>
+            <!-- Owner Tag -->
+            {% if forum.owner %}
+                        {% if forum.owner.is_superuser %}
+                        <v-chip href="/profile/{{ forum.owner.username }}" color="orange" text-color="white">
+                            <v-icon left>mdi-shield-star</v-icon>{{ forum.owner.username }}
+                        </v-chip>
+                        {% elif forum.owner.is_staff %}
+                        <v-chip href="/profile/{{ forum.owner.username }}" color="success" text-color="white">
+                            <v-icon left>mdi-shield-account</v-icon>{{ forum.owner.username }}
+                        </v-chip>
+                        {% else %}
+                        <v-chip href="/profile/{{ forum.owner.username }}" color="info" text-color="white">
+                            <v-icon left>mdi-account</v-icon>{{ forum.owner.username }}
+                        </v-chip>
+                        {% endif %}
+                    {% endif %}
+        </v-card-title>
+
+        <v-card-text>
+            {{ forum.description }}
+        </v-card-text>
+    </v-card>
+</v-row>
 {% endfor %}
 
 {% endblock %}

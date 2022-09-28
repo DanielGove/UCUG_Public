@@ -1,4 +1,4 @@
-{% extends "header.html" %}
+{% extends "auth_header.html" %}
 
 {% block content %}
     <v-card elevation="24" max-width="400px" class="rounded-lg">
@@ -29,7 +29,7 @@
                 <v-divider class="mx-4"></v-divider>
 
                 <v-btn type="submit" color="success">Login</v-btn>
-                <v-btn githref="/register" color="primary">Register</v-btn>
+                <v-btn href="/register" color="primary">Register</v-btn>
             </form>
         </v-card-text>
     </v-card>

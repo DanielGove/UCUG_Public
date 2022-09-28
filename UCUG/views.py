@@ -1,6 +1,7 @@
-from UCUG.models import record_session
 from django.shortcuts import render
+from django.http import HttpResponse
 
+from UCUG.models import record_session
 from UCUG.models import Announcement, Forum
 
 def home(request):
@@ -12,3 +13,25 @@ def home(request):
     return render(request=request, template_name="home.html",
                 context = {"announcements": announcements,
                             "forums": forums})
+
+def create_announcement(request):
+    # Check if the user can make announcements
+    if not request.user.has_perm("add_announcement"): return HttpResponse("Nice try!")
+    
+    announcement = Announcement(title=request.POST["title"],
+                                content=request.POST["content"],
+                                author=request.user)
+    announcement.save()
+
+    return HttpResponse("Hello")
+
+def create_forum(request):
+    # Check if the user can make forums
+    if not request.user.has_perm("add_forum"): return HttpResponse("Nice try!")
+
+    forum = Forum(title=request.POST["title"],
+                    description=request.POST["description"],
+                    owner=request.user)
+    forum.save()
+
+    return HttpResponse("Hello")

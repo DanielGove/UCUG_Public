@@ -20,6 +20,7 @@ class Forum(models.Model):
 class Announcement(models.Model):
     title = models.CharField(max_length=64, null=True)
     content = models.TextField()
+    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
     created_UTC = models.DateTimeField(auto_now_add=True)
 
