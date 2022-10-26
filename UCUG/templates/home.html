@@ -19,7 +19,7 @@
 </v-row>
 {% endif %}
 
-<!-- Display announcement or forum creation forms here -->
+<!-- Display announcement creation form here -->
 <v-row v-if="announcement_form">
     <v-card width="100%"
             class="ma-2"
@@ -50,13 +50,45 @@
 
 <!-- Are there any announcements? -->
 <div id="announcement_list">
-{% for announcement in announcements %}
-    {% include "announcement.html" with announcement=announcement %}
-{% endfor %}
+    <v-row v-for="announcement in announcements" :key="announcement.title">
+        <v-card outlined
+                width="100%"
+                elevation=6
+                class="ma-2 rounded-lg"
+                style="border-left: 8px solid rgb(39,86,139)">
+            <v-card-title>
+                [[ announcement.title ]]
+                <v-spacer></v-spacer>
+                <!-- Author Tag -->
+                <v-chip v-if="announcement.author_class == 'super'" 
+                    :href="announcement.author_url" color="orange" text-color="white">
+                    <v-icon left>mdi-shield-star</v-icon>[[ announcement.author_name ]]
+                </v-chip>
+                <v-chip v-if="announcement.author_class == 'staff'"
+                    :href="announcement.author_url" color="success" text-color="white">
+                    <v-icon left>mdi-shield-account</v-icon>[[ announcement.author_name ]]
+                </v-chip>
+                <v-chip v-if="announcement.author_class == 'user'"
+                    :href="announcement.author_url" color="info" text-color="white">
+                    <v-icon left>mdi-account</v-icon>[[ announcement.author_name ]]
+                </v-chip>
+            </v-card-title>
+
+            <v-card-text>
+                [[ announcement.content ]]
+            </v-card-text>
+
+            <v-card-actions v-if="announcement.can_edit">
+                <v-btn small class="mx-1" fab color="info"><v-icon>mdi-pencil</v-icon></v-btn>
+                <v-btn v-on:click="delete_announcement(announcement.id)" small class="mx-1" fab color="error"><v-icon>mdi-delete</v-icon></v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-row>
 </div>
 
 <v-divider></v-divider>
-<!-- New forum form -->
+
+<!-- Display forum creation form here -->
 <v-row v-if="forum_form">
     <v-card width="100%"
             class="ma-2"
@@ -87,52 +119,52 @@
     </v-card>
 </v-row>
 
-
 <!-- Search bar to filter forums -->
+<v-row>
+    <v-card outlined
+            elevation=4
+            width="100%"
+            class="pr-2 ma-0 rounded-lg">
+        <v-text-field prepend-icon="mdi-magnify"></v-text-field>
+    </v-card>
+</v-row>
 
 <!-- Display each forum -->
-{% for forum in forums %}
-<v-row id="forum{{ forum.id }}">
+<v-row v-for="forum in forums" :key="forum.title">
     <v-hover v-slot="{ hover }"/>
     <v-card outlined
             width="100%"
             :elevation="hover ? 12 : 6"
             class="ma-2 rounded-lg"
-            href="/profile/CAT"
+            :href="forum.url"
             style="text-decoration: none;
                     border-left: 8px solid rgb(39,86,139)">
         <v-card-title>
-            {{ forum.title }}
+            [[ forum.title ]]
             <v-spacer></v-spacer>
             <!-- Owner Tag -->
-            {% if forum.owner %}
-                {% if forum.owner.is_superuser %}
-                <v-chip href="/profile/{{ forum.owner.username }}" color="orange" text-color="white">
-                    <v-icon left>mdi-shield-star</v-icon>{{ forum.owner.username }}
-                </v-chip>
-                {% elif forum.owner.is_staff %}
-                <v-chip href="/profile/{{ forum.owner.username }}" color="success" text-color="white">
-                    <v-icon left>mdi-shield-account</v-icon>{{ forum.owner.username }}
-                </v-chip>
-                {% else %}
-                <v-chip href="/profile/{{ forum.owner.username }}" color="info" text-color="white">
-                    <v-icon left>mdi-account</v-icon>{{ forum.owner.username }}
-                </v-chip>
-                {% endif %}
-            {% endif %}
+            <v-chip v-if="forum.owner_class == 'super'" 
+                :href="forum.owner_url" color="orange" text-color="white">
+                <v-icon left>mdi-shield-star</v-icon>[[ forum.owner_name ]]
+            </v-chip>
+            <v-chip v-if="forum.owner_class == 'staff'"
+                :href="forum.owner_url" color="success" text-color="white">
+                <v-icon left>mdi-shield-account</v-icon>[[ forum.owner_name ]]
+            </v-chip>
+            <v-chip v-if="forum.owner_class == 'user'"
+                :href="forum.owner_url" color="info" text-color="white">
+                <v-icon left>mdi-account</v-icon>[[ forum.owner_name ]]
+            </v-chip>
         </v-card-title>
 
         <v-card-text>
-            {{ forum.description }}
+            [[ forum.description ]]
         </v-card-text>
 
-        {% if perms.UCUG.change_forum %}
-        <v-card-actions>
+        <v-card-actions v-if="forum.can_edit">
             <v-btn small class="mx-1" fab color="info"><v-icon>mdi-pencil</v-icon></v-btn>
         </v-card-actions>
-        {% endif %}
     </v-card>
 </v-row>
-{% endfor %}
 
 {% endblock %}

@@ -75,6 +75,58 @@
                     create_announcement_title: "",
                     create_announcement_content: "",
 
+                    announcements: { {% for announcement in announcements %}
+                                        {{ announcement.id }} :
+                                        {
+                                            "id" : "{{ announcement.id }}",
+                                            "title" : "{{ announcement.title }}",
+
+                                            "author_name" : "{{ announcement.author.username }}",
+                                            "author_id" : "{{ announcement.author.id }}",
+                                            "author_class" : {% if announcement.author.is_superuser %}
+                                                                "super"
+                                                            {% elif announcement.author.is_staff %}
+                                                                "staff"
+                                                            {% else %}
+                                                                "user"
+                                                            {% endif %},
+                                            "author_url" : "/profile/{{ announcement.author.username }}",
+
+                                            "content" : "{{ announcement.content|escapejs }}",
+                                            "can_edit" : {% if perms.UCUG.change_announcement %}
+                                                            true
+                                                        {% else %}
+                                                            false
+                                                        {% endif %}
+                                        },
+                                    {% endfor %}},
+                    forums : { {% for forum in forums %}
+                                {{ forum.id }} : {
+                                    "id" : {{ forum.id }},
+                                    "title" : "{{ forum.title }}",
+                                    "description" : "{{ forum.description }}",
+                                    "url" : "/forum/" + "{{ forum.title }}",
+
+                                    {% if forum.owner %}
+                                    "owner_name" : "{{ forum.owner.username }}",
+                                    "owner_url" : "/profile/{{ forum.owner.username }}",
+                                    "owner_class" : {% if forum.owner.is_superuser %}
+                                                    "super"
+                                                    {% elif forum.owner.is_staff %}
+                                                    "staff"
+                                                    {% else %}
+                                                    "user"
+                                                    {% endif %},
+                                    {% endif %}
+
+                                    "can_edit" : {% if perms.UCUG.change_forum %}
+                                                    true
+                                                {% else %}
+                                                    false
+                                                {% endif %},
+                                },          
+                            {% endfor %}},
+
                     forum_form: false,
                     forum_valid: false,
                     create_forum_title: "",
@@ -97,25 +149,47 @@
                             .then(res => {this.announcement_form = false;
                                         this.create_announcement_title = "";
                                         this.create_announcement_content = "";
-                                        this.render_announcement(res);})
+                                        this.render_announcement(res);
+                                        console.log("Sucessfully created announcement.")})
                             .catch(err => console.log(err))
                     },
-                    render_announcement(announcement) {
+                    render_announcement(response_data) {
+                        // Add the announcement to the component's announcement list to render it dynamically.
+                        announcement = JSON.parse(response_data.data[0])[0]
+                        author = JSON.parse(response_data.data[1])[0]
+
+                        if (author.fields.is_superuser) {
+                            author_class = "super"
+                        } else if (author.fields.is_staff) {
+                            author_class = "staff"
+                        } else {
+                            author_class = "user"
+                        }
                         
+                        this.announcements[announcement.pk] = {
+                            "id" : announcement.pk,
+                            "title" : announcement.fields.title,
+                            "content" : announcement.fields.content,
+
+                            "author_id" : author.pk,
+                            "author_name" : author.fields.username,
+                            "author_class" : author_class,
+                            "author_url" : "/profile/" + author.fields.username,
+                            "can_edit" : true,
+                        }
                     },
                     delete_announcement(id) {
-                        // Remove it from the webpage
-                        announcement = document.getElementById("announcement" + id)
-                        announcement.remove()
-
                         // Remove it from the database
                         axios.delete("/delete_announcement/" + id, {
                                 headers: {
                                     "X-CSRFTOKEN": "{{ csrf_token }}"
                                 }
                             })
-                            .then(res => console.log(res))
+                            .then(res => console.log(res.data))
                             .catch(err => console.log(err))
+
+                        // Remove it from the webpage
+                        Vue.delete(vue.announcements, id)
                     },
 
                     toggle_forum_form() {
@@ -137,8 +211,32 @@
                                         this.render_forum(res);})
                             .catch(err => console.log(err))
                     },
-                    render_forum(forum) {
+                    render_forum(response_data) {
+                        // Add the forum to the component's list of forums to be rendered dynamically.
+                        forum = JSON.parse(response_data.data[0])[0]
+                        owner = JSON.parse(response_data.data[1])[0]
+                        
+                        if (owner.fields.is_superuser) {
+                            owner_class = "super"
+                        } else if (owner.fields.is_staff) {
+                            owner_class = "staff"
+                        } else {
+                            owner_class = "user"
+                        }
 
+                        console.log(forum)
+                        console.log(owner)
+
+                        this.forums[forum.pk] = {
+                            "title" : forum.fields.title,
+                            "description" : forum.fields.description,
+
+                            "owner_name" : owner.fields.username,
+                            "owner_class" : owner_class,
+                            "owner_url" : "/profile/" + owner.fields.username,
+
+                            "can_edit" : true,
+                        }
                     },
                 },
                 watch: {
