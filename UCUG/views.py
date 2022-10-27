@@ -35,6 +35,17 @@ def create_announcement(request):
 
     return HttpResponse(json.dumps([announcement_data, author_data]))
 
+def edit_announcement(request):
+    # Check if the user can edit announcements
+    if not request.user.has_perm("edit_announcement"): return HttpResponse("Nice try!")
+
+    announcement = Announcement.objects.get(id=request.POST["id"])
+    announcement.title = request.POST["title"]
+    announcement.content = request.POST["content"]
+    announcement.save()
+
+    return HttpResponse("Announcement {} edited.".format(announcement.id))
+
 def delete_announcement(request, id):
     if not request.user.has_perm("delete_announcement"): return HttpResponse("Nice try!")
 

@@ -3,9 +3,6 @@ Write detailed error message for registration when there is a:
     invalid password
     taken username
 
-Add update functionality to announcements and forums.
-Add search bar to the homepage for forums.
-
 Build forum pages
     Make separate application
     Display posts

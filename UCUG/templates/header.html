@@ -72,8 +72,11 @@
                     
                     announcement_create_form: false,
                     announcement_edit_form: false,
+                    edit_announcement_valid: false,
                     edit_announcement_id: 0,
-                    announcement_valid: false,
+                    edit_announcement_title: "",
+                    edit_announcement_content: "",
+                    create_announcement_valid: false,
                     create_announcement_title: "",
                     create_announcement_content: "",
 
@@ -129,8 +132,8 @@
                                 },          
                             {% endfor %}},
 
-                    forum_form: false,
-                    forum_valid: false,
+                    forum_create_form: false,
+                    create_forum_valid: false,
                     create_forum_title: "",
                     create_forum_description: "",
                 }),
@@ -140,10 +143,39 @@
                     },
                     toggle_announcement_edit_form(id) {
                         this.announcement_edit_form = !this.announcement_edit_form
-                        this.edit_announcement_id = id
+                        if (this.announcement_edit_form) {
+                            this.edit_announcement_id = id
+                            this.edit_announcement_title = this.announcements[id].title
+                            this.edit_announcement_content = this.announcements[id].content
+                        } else {
+                            this.edit_announcement_id = 0
+                            this.edit_announcement_title = ""
+                            this.edit_announcement_content = ""
+                        }
+                    },
+                    edit_announcement() {
+                        if (!this.edit_announcement_valid) {return false}
+                        
+                        announcement = this.announcements[this.edit_announcement_id]
+
+                        let data = new FormData()
+                        data.append("id", this.edit_announcement_id)
+                        data.append("title", this.edit_announcement_title)
+                        data.append("content", this.edit_announcement_content)
+                        data.append("csrfmiddlewaretoken", '{{ csrf_token }}')
+
+                        axios.post("{% url 'edit_announcement' %}", data)
+                            .then(res => {this.announcement_edit_form = false;
+                                        announcement.title = this.edit_announcement_title
+                                        this.edit_announcement_title = "";
+                                        announcement.content = this.edit_announcement_content
+                                        this.edit_announcement_content = "";
+                                        this.edit_announcement_id = null;
+                                        console.log("Successfully edited announcement.")})
+                            .catch(err => console.log(err))
                     },
                     create_announcement() {
-                        if (!this.announcement_valid) {return false}
+                        if (!this.create_announcement_valid) {return false}
 
                         let data = new FormData()
                         data.append("title", this.create_announcement_title)
@@ -195,13 +227,19 @@
 
                         // Remove it from the webpage
                         Vue.delete(vue.announcements, id)
+
+                        // Close the applicable edit form.
+                        if (this.edit_announcement_id == id) {
+                            this.edit_announcement_id = null
+                            this.announcement_edit_form = false
+                        }
                     },
 
-                    toggle_forum_form() {
-                        this.forum_form = !this.forum_form
+                    toggle_forum_create_form() {
+                        this.forum_create_form = !this.forum_create_form
                     },
                     create_forum() {
-                        if (!this.forum_valid) {return false}
+                        if (!this.create_forum_valid) {return false}
 
                         let data = new FormData()
                         data.append("title", this.create_forum_title)
@@ -209,7 +247,7 @@
                         data.append("csrfmiddlewaretoken", '{{ csrf_token }}')
 
                         axios.post("{% url 'create_forum' %}", data)
-                            .then(res => {this.forum_form = false;
+                            .then(res => {this.forum_create_form = false;
                                         this.create_forum_title = "";
                                         this.create_forum_description = "";
                                         this.render_forum(res);

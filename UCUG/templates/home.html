@@ -12,7 +12,7 @@
     {% endif %}
 
     {% if perms.UCUG.add_forum %}
-    <v-btn @click="toggle_forum_form" color="info" class="ma-2" elevation=6>
+    <v-btn @click="toggle_forum_create_form" color="info" class="ma-2" elevation=6>
         <v-icon left>mdi-pencil</v-icon>Forum
     </v-btn>
     {% endif %}
@@ -30,7 +30,7 @@
 
         <!-- The Form -->
         <v-card-text class="pb-0">
-            <v-form v-model="announcement_valid">
+            <v-form v-model="create_announcement_valid">
                 <v-text-field v-model="create_announcement_title"
                             label="Title"
                             placeholder="Title"
@@ -50,7 +50,31 @@
 
 <!-- Display announcement edit form -->
 <v-row v-if="announcement_edit_form">
-    EDIT
+    <v-card width="100%"
+            class="ma-2"
+            elevation=6
+            outlined
+            style="border-left: 8px solid rgb(39,86,139)">
+        <v-card-title>Edit  "[[ announcements[edit_announcement_id].title ]]"</v-card-title>
+
+        <!-- The Form -->
+        <v-card-text class="pb-0">
+            <v-form v-model="edit_announcement_valid">
+                <v-text-field v-model="edit_announcement_title"
+                            label="Title"
+                            placeholder="Title"
+                            :rules="title_rules"></v-text-field>
+                <v-textarea v-model="edit_announcement_content"
+                            label="Content"
+                            placeholder="Content"></v-textarea>
+            </v-form>
+        </v-card-text>
+
+        <v-card-actions class="pt-0">
+            <v-spacer></v-spacer>
+            <v-btn @click="edit_announcement" color="success">Edit</v-btn>
+        </v-card-actions>
+    </v-card>
 </v-row>
 
 <!-- Are there any announcements? -->
@@ -94,7 +118,7 @@
 <v-divider></v-divider>
 
 <!-- Display forum creation form here -->
-<v-row v-if="forum_form">
+<v-row v-if="forum_create_form">
     <v-card width="100%"
             class="ma-2"
             elevation=6
@@ -104,7 +128,7 @@
 
         <!-- The Form -->
         <v-card-text class="pb-0">
-            <v-form v-model="forum_valid">
+            <v-form v-model="create_forum_valid">
                 <v-text-field v-model="create_forum_title"
                             label="Title"
                             placeholder="Title"
@@ -121,16 +145,6 @@
             <v-spacer></v-spacer>
             <v-btn @click="create_forum" color="success">Create</v-btn>
         </v-card-actions>
-    </v-card>
-</v-row>
-
-<!-- Search bar to filter forums -->
-<v-row>
-    <v-card outlined
-            elevation=4
-            width="100%"
-            class="pr-2 ma-0 rounded-lg">
-        <v-text-field prepend-icon="mdi-magnify"></v-text-field>
     </v-card>
 </v-row>
 
@@ -165,10 +179,6 @@
         <v-card-text>
             [[ forum.description ]]
         </v-card-text>
-
-        <v-card-actions v-if="forum.can_edit">
-            <v-btn small class="mx-1" fab color="info"><v-icon>mdi-pencil</v-icon></v-btn>
-        </v-card-actions>
     </v-card>
 </v-row>
 
