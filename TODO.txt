@@ -1,2 +1,22 @@
 
-Write detailed error message for registration when there is an invalid password, taken username, etc.
+Write detailed error message for registration when there is a:
+    invalid password
+    taken username
+
+Add update functionality to announcements and forums.
+Add search bar to the homepage for forums.
+
+Build forum pages
+    Make separate application
+    Display posts
+    Order/filter posts
+    CRUD functionality for posts
+    Like/Dislike posts for registered users.
+
+Build post pages.
+    Make separate application
+    Display comments.
+    Indicate comment hierarchy.
+    Add CRUD functionality for comments
+    Order/filter comments
+    Add like/dislike functionality on comments for registered users

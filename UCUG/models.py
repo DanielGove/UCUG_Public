@@ -14,6 +14,15 @@ class Forum(models.Model):
     title = models.CharField(max_length=64, default="Null")
     description = models.CharField(max_length=256)
 
+    def public_data(self):
+        data = {
+            "id": self.id,
+            "title" : self.title,
+            "description" : self.description,
+            "owner" : self.owner.id,
+        }
+        return data
+
     def __str__(self):
         return self.title
 
@@ -23,6 +32,15 @@ class Announcement(models.Model):
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
     created_UTC = models.DateTimeField(auto_now_add=True)
+
+    def public_data(self):
+        data = {
+            "id" : self.id,
+            "title": self.title,
+            "content" : self.content,
+            "author": self.author.id,
+        }
+        return data
 
 class Post(models.Model):
     title = models.CharField(max_length=64, default="Null")

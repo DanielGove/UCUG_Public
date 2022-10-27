@@ -47,5 +47,15 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name = _('User')
         verbose_name_plural = _('Users')
 
+    def public_data(self):
+        data = {
+            "id" : self.id,
+            "username" : self.username,
+            "url" : "/profile/{}".format(self.username),
+            "is_superuser" : self.is_superuser,
+            "is_staff" : self.is_staff,
+        }
+        return data
+
     def __str__(self):
         return self.username

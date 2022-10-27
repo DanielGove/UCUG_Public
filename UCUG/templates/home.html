@@ -6,7 +6,7 @@
 {% if perms.UCUG.add_announcement or perms.UCUG.add_forum %}
 <v-row justify="end">
     {% if perms.UCUG.add_announcement %}
-    <v-btn @click="toggle_announcement_form" color="info" class="ma-2" elevation=6>
+    <v-btn @click="toggle_announcement_create_form" color="info" class="ma-2" elevation=6>
         <v-icon left>mdi-pencil</v-icon>Announcement
     </v-btn>
     {% endif %}
@@ -19,8 +19,8 @@
 </v-row>
 {% endif %}
 
-<!-- Display announcement creation form here -->
-<v-row v-if="announcement_form">
+<!-- Display announcement creation form -->
+<v-row v-if="announcement_create_form">
     <v-card width="100%"
             class="ma-2"
             elevation=6
@@ -46,6 +46,11 @@
             <v-btn @click="create_announcement" color="success">Create</v-btn>
         </v-card-actions>
     </v-card>
+</v-row>
+
+<!-- Display announcement edit form -->
+<v-row v-if="announcement_edit_form">
+    EDIT
 </v-row>
 
 <!-- Are there any announcements? -->
@@ -79,7 +84,7 @@
             </v-card-text>
 
             <v-card-actions v-if="announcement.can_edit">
-                <v-btn small class="mx-1" fab color="info"><v-icon>mdi-pencil</v-icon></v-btn>
+                <v-btn v-on:click="toggle_announcement_edit_form(announcement.id)" small class="mx-1" fab color="info"><v-icon>mdi-pencil</v-icon></v-btn>
                 <v-btn v-on:click="delete_announcement(announcement.id)" small class="mx-1" fab color="error"><v-icon>mdi-delete</v-icon></v-btn>
             </v-card-actions>
         </v-card>

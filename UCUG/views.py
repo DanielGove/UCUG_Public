@@ -30,12 +30,10 @@ def create_announcement(request):
     announcement.save()
 
     # Return new announcement data to be rendered.
-    serialized_announcement = serializers.serialize("json", [announcement])
+    announcement_data = announcement.public_data()
+    author_data = announcement.author.public_data()
 
-    author_data = User.objects.filter(id=announcement.author.id)
-    serialized_author = serializers.serialize("json", list(author_data), fields=('id', 'username', 'is_superuser', 'is_staff'))
-
-    return HttpResponse(json.dumps([serialized_announcement, serialized_author]))
+    return HttpResponse(json.dumps([announcement_data, author_data]))
 
 def delete_announcement(request, id):
     if not request.user.has_perm("delete_announcement"): return HttpResponse("Nice try!")
@@ -54,9 +52,7 @@ def create_forum(request):
     forum.save()
 
     # Return new forum data to be rendered.
-    serialized_forum = serializers.serialize("json", [forum])
+    forum_data = forum.public_data()
+    owner_data = forum.owner.public_data()
 
-    owner_data = User.objects.filter(id=forum.owner.id)
-    serialized_owner = serializers.serialize("json", list(owner_data), fields=('id', 'username', 'is_superuser', 'is_staff'))
-
-    return HttpResponse(json.dumps([serialized_forum, serialized_owner]))
+    return HttpResponse(json.dumps([forum_data, owner_data]))
