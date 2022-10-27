@@ -100,6 +100,7 @@
                             this.profile_image = res.data;
                             this.profile_image_input = null;
                             this.profile_image_form = false;
+                            console.log("Successfully updated image.")
                         })
                         .catch(err => console.log(err))
                     },
@@ -108,6 +109,11 @@
                     },
                     toggle_description_form(event) {
                         this.profile_description_form = !this.profile_description_form
+                        if (this.profile_description_form) {
+                            this.profile_description_input = this.profile_description
+                        } else {
+                            this.profile_description_form = ""
+                        }
                     },
                     upload_description() {
                         if (!this.description_valid) {
@@ -122,7 +128,8 @@
                         axios.post("{% url 'profile_description' %}", data)
                             .then(res => {this.profile_description = res.data;
                                         this.profile_description_input = null;
-                                        this.profile_description_form = false;})
+                                        this.profile_description_form = false;
+                                        console.log("Successfully updated description.")})
                             .catch(err => console.log(err))
                     },
                 },
