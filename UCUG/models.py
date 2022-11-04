@@ -27,7 +27,17 @@ class Session(models.Model):
     method = models.CharField(max_length=8)
     route = models.CharField(max_length=32)
 
-def record_session(request):
+    MESSAGES = (
+        ('NONE', ''),
+        ('NO_AUTH', 'NO_AUTH'),
+    )
+    message = models.CharField(
+        max_length=16,
+        choices=MESSAGES,
+        default="NONE",
+    )
+
+def record_session(request, message=None):
     # When hosting on pythonanywhere (DEBUG=False) this is where the client IP is stored.
     # Using the regular method would return the ip of a pythonanywhere server.
     if DEBUG == False:
@@ -41,8 +51,10 @@ def record_session(request):
         user = request.user
     else:
         user=None
+
     session = Session(ip=ip,
                       method=request.method,
                       route=request.path,
-                      user=user)
+                      user=user,
+                      message=message if message else "NONE")
     return session.save()

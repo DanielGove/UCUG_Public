@@ -63,7 +63,6 @@ class LoginView(View):
 
 def logout_request(request):
     record_session(request)
-
     logout(request)
     return redirect("/home")
 
@@ -88,6 +87,7 @@ def update_profile_description(request):
         try:
             user = User.objects.get(username=request.user.username)
         except:
+            record_session(request, "NO_AUTH")
             return HttpResponse("Nice try!")
 
         if description:
@@ -106,7 +106,8 @@ def update_profile_image(request):
         try:
             user = User.objects.get(username=request.user.username)
         except:
-            return ("Nice try!")
+            record_session(request, "NO_AUTH")
+            return HttpResponse("Nice try!")
 
         if image:
             user.profile_picture = image

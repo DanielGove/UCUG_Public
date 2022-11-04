@@ -4,7 +4,7 @@
 
 <!-- Provide edit functionality for superusers -->
 {% if perms.UCUG.add_announcement or perms.UCUG.add_forum %}
-<v-row justify="end">
+<v-row justify="end" class="mb-1">
     {% if perms.UCUG.add_announcement %}
     <v-btn @click="toggle_announcement_create_form" color="info" class="ma-2" elevation=6>
         <v-icon left>mdi-pencil</v-icon>Announcement

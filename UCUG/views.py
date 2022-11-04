@@ -7,10 +7,8 @@ from UCUG.models import record_session
 from UCUG.models import Announcement, User
 from ucug_forum.models import Forum
 
-
 def home(request):
     record_session(request)
-
     announcements = Announcement.objects.all()
     forums = Forum.objects.all()
 
@@ -23,7 +21,9 @@ def home(request):
 
 def create_announcement(request):
     # Check if the user can make announcements
-    if not request.user.has_perm("add_announcement"): return HttpResponse("Nice try!")
+    if not request.user.has_perm("add_announcement"):
+        record_session(request, "NO_AUTH")
+        return HttpResponse("Nice try!")
 
     announcement = Announcement(title=request.POST["title"],
                                 content=request.POST["content"],
@@ -37,8 +37,12 @@ def create_announcement(request):
     return HttpResponse(json.dumps([announcement_data, author_data]))
 
 def edit_announcement(request):
+    record_session(request)
+
     # Check if the user can edit announcements
-    if not request.user.has_perm("edit_announcement"): return HttpResponse("Nice try!")
+    if not request.user.has_perm("edit_announcement"):
+        record_session(request, "NO_AUTH")
+        return HttpResponse("Nice try!")
 
     announcement = Announcement.objects.get(id=request.POST["id"])
     announcement.title = request.POST["title"]
@@ -48,7 +52,9 @@ def edit_announcement(request):
     return HttpResponse("Announcement {} edited.".format(announcement.id))
 
 def delete_announcement(request, id):
-    if not request.user.has_perm("delete_announcement"): return HttpResponse("Nice try!")
+    if not request.user.has_perm("delete_announcement"):
+        record_session(request, "NO_AUTH")
+        return HttpResponse("Nice try!")
 
     announcement = Announcement.objects.get(id=id)
     announcement.delete()
