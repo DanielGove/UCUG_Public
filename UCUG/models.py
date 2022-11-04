@@ -1,30 +1,8 @@
-from django.db import models 
-from django.contrib.contenttypes.fields import GenericForeignKey
-from django.contrib.contenttypes.models import ContentType
+from UCUG.settings import DEBUG
+from django.db import models
 
 from ucug_auth.models import User
 
-# Django automatically creates an integer id primary key.
-class Forum(models.Model):
-    created_UTC = models.DateTimeField(auto_now_add=True)
-    updated_UTC = models.DateTimeField(auto_now=True)
-
-    owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-
-    title = models.CharField(max_length=64, default="Null")
-    description = models.CharField(max_length=256)
-
-    def public_data(self):
-        data = {
-            "id": self.id,
-            "title" : self.title,
-            "description" : self.description,
-            "owner" : self.owner.id,
-        }
-        return data
-
-    def __str__(self):
-        return self.title
 
 class Announcement(models.Model):
     title = models.CharField(max_length=64, null=True)
@@ -42,38 +20,6 @@ class Announcement(models.Model):
         }
         return data
 
-class Post(models.Model):
-    title = models.CharField(max_length=64, default="Null")
-    content = models.TextField()
-
-    created_UTC = models.DateTimeField(auto_now_add=True)
-    updated_UTC = models.DateTimeField(auto_now=True)
-
-    parent_forum = models.ForeignKey(Forum, on_delete=models.CASCADE)
-    owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    ip_owner = models.GenericIPAddressField(null=True)
-
-    def __str__(self):
-        return self.title
-
-class Comment(models.Model):
-    content = models.TextField()
-
-    created_UTC = models.DateTimeField(auto_now_add=True)
-    updated_UTC = models.DateTimeField(auto_now=True)
-
-    # A comment will either be to a post or another comment.
-    # reference_type tells us on which table to use the reference_id.
-    reference_type = models.ForeignKey(ContentType, on_delete=models.SET_NULL, null=True)
-    reference_id = models.PositiveIntegerField()
-
-    parent_post = GenericForeignKey('reference_type', 'reference_id')
-    owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    ip_owner = models.GenericIPAddressField(null=True)
-
-    def __str__(self):
-        return self.content[:24]
-
 class Session(models.Model):
     time_UTC = models.DateTimeField(auto_now_add=True)
     ip = models.GenericIPAddressField(null=True)
@@ -81,18 +27,6 @@ class Session(models.Model):
     method = models.CharField(max_length=8)
     route = models.CharField(max_length=32)
 
-class private_message(models.Model):
-    created_UTC = models.DateTimeField(auto_now_add=True)
-
-    is_read = models.BooleanField(default=False)
-
-    from_user = models.ForeignKey(User, related_name='%(class)s_from_user', on_delete=models.SET_NULL, null=True)
-    to_user = models.ForeignKey(User, related_name='%(class)s_to_user', on_delete=models.SET_NULL, null=True)
-
-    subject = models.CharField(max_length=32)
-    message = models.TextField(null=True)
-
-from UCUG.settings import DEBUG
 def record_session(request):
     # When hosting on pythonanywhere (DEBUG=False) this is where the client IP is stored.
     # Using the regular method would return the ip of a pythonanywhere server.
@@ -112,5 +46,3 @@ def record_session(request):
                       route=request.path,
                       user=user)
     return session.save()
-
-# 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

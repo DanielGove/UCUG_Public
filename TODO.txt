@@ -4,14 +4,14 @@ Write detailed error message for registration when there is a:
     taken username
 
 Build forum pages
-    Make separate application
+    Allow update functionality for forum title and description
     Display posts
     Order/filter posts
     CRUD functionality for posts
     Like/Dislike posts for registered users.
 
 Build post pages.
-    Make separate application
+    Allow update functionality for post title and content
     Display comments.
     Indicate comment hierarchy.
     Add CRUD functionality for comments
