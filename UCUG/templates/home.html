@@ -4,7 +4,7 @@
 
 <!-- Provide edit functionality for superusers -->
 {% if perms.UCUG.add_announcement or perms.UCUG.add_forum %}
-<v-row justify="end" class="mb-1">
+<v-row justify="end" class="pr-3">
     {% if perms.UCUG.add_announcement %}
     <v-btn @click="toggle_announcement_create_form" color="info" class="ma-2" elevation=6>
         <v-icon left>mdi-pencil</v-icon>Announcement
@@ -73,12 +73,13 @@
         <v-card-actions class="pt-0">
             <v-spacer></v-spacer>
             <v-btn @click="edit_announcement" color="success">Edit</v-btn>
+            <v-btn @click="toggle_announcement_edit_form" color="error">Cancel</v-btn>
         </v-card-actions>
     </v-card>
 </v-row>
 
 <!-- Are there any announcements? -->
-<div id="announcement_list">
+<div id="announcement_list" class="mt-2">
     <v-row v-for="announcement in announcements" :key="announcement.title">
         <v-card outlined
                 width="100%"

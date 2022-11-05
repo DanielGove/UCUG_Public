@@ -16,11 +16,20 @@ class Forum(models.Model):
     description = models.CharField(max_length=256)
 
     def public_data(self):
+        if self.owner.is_superuser:
+            owner_class = "super"
+        elif self.owner.is_staff:
+            owner_class = "staff"
+        else:
+            owner_class = "user"
+
         data = {
             "id" : self.id,
             "title" : self.title,
             "description" : self.description,
-            "owner" : self.owner.id,
+            "owner_id" : self.owner.id,
+            "owner_name" : self.owner.username,
+            "owner_class" : owner_class,
         }
         return data
 

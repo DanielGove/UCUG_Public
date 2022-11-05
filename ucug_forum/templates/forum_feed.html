@@ -1,5 +1,73 @@
 {% extends "forum_header.html" %}
 
 {% block content %}
-{{ forum.title }}
+
+<!-- Title Tag, like on the home page. -->
+<v-row id="forum_header" class="mt-1">
+    <v-card outlined
+            width="100%"
+            elevation=6
+            class="ma-2 rounded-lg"
+            style="border-left: 8px solid rgb(39,86,139)">
+        <v-card-title>
+            [[ forum.title ]]
+            <v-spacer></v-spacer>
+            <!-- Edit Functionality -->
+            {% if perms.UCUG.edit_forum %}
+                <v-chip v-on:click="toggle_forum_edit_form()" small
+                class="mr-2 pa-3" color="info">
+                <v-icon>mdi-pencil</v-icon></v-chip>
+            {% endif %}
+
+            <!-- Author Tag -->
+            {% if forum.owner_id %}
+            <v-chip :href="forum.owner_url" color="orange" text-color="white">
+                <v-icon left>mdi-shield-star</v-icon>[[ forum.owner_name ]]
+            </v-chip>
+            {% endif %}
+        </v-card-title>
+
+        <v-card-text>
+            [[ forum.description ]]
+        </v-card-text>
+    </v-card>
+</v-row>
+
+<!-- Edit Form for Forum -->
+<v-row v-if="forum_edit_form">
+    <v-card width="95%"
+        class="ma-2"
+        elevation=6
+        outlined
+        style="border-left: 8px solid rgb(39,86,139)">
+        <v-card-title>Edit  "[[ forum.title ]]"</v-card-title>
+
+        <!-- The Form -->
+        <v-card-text class="pb-0">
+            <v-form v-model="edit_forum_valid">
+                <v-text-field v-model="edit_forum_title"
+                            label="Title"
+                            placeholder="Title"
+                            :rules="title_rules"></v-text-field>
+                <v-textarea v-model="edit_forum_description"
+                            label="Description"
+                            placeholder="Description"
+                            :rules="content_rules"></v-textarea>
+            </v-form>
+        </v-card-text>
+
+        <v-card-actions class="pt-0">
+            <v-spacer></v-spacer>
+            <v-btn @click="edit_forum" color="success">Edit</v-btn>
+            <v-btn @click="toggle_forum_edit_form" color="error">Cancel</v-btn>
+        </v-card-actions>
+    </v-card>
+</v-row>
+
+<!-- Search bar and other READ operations -->
+<div id="filter_container"></div>
+
+<!-- Display Posts -->
+<div id="post_list"></div>
+
 {% endblock%}

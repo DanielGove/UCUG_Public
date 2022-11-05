@@ -61,8 +61,56 @@
                     drawer: false,
                     // Group ???
                     group: null,
+
+                    title_rules: [
+                        title => !!title || "You must have a title!",
+                        title => (title || '').length <= 64 || "The title can't be longer than 64 characters!",
+                    ],
+                    content_rules: [
+                        content => (content || '').length <= 256 || "The content can't be longer than 256 characters!",
+                    ],
+
+                    forum: {
+                        "id" : {{ forum.id }},
+                        "title" : "{{ forum.title|escapejs }}",
+                        "description" : "{{ forum.description|escapejs }}",
+                        "owner_id" : {{ forum.owner_id }},
+                        "owner_name" : "{{ forum.owner_name|escapejs }}",
+                        "owner_class" : "{{ forum.owner_class }}",
+                        "owner_url" : "/profile/{{ forum.owner_name|escapejs }}",
+                    },
+                    forum_edit_form: false,
+                    edit_forum_valid: false,
+                    edit_forum_title: "",
+                    edit_forum_description: "",
                 }),
-                methods: {},
+                methods: {
+                    toggle_forum_edit_form() {
+                        this.forum_edit_form = !this.forum_edit_form
+                        if (this.forum_edit_form) {
+                            this.edit_forum_title = this.forum.title
+                            this.edit_forum_description = this.forum.description
+                        }
+                    },
+                    edit_forum() {
+                        if (!this.edit_forum_valid) return false;
+
+                        let data = new FormData()
+                        data.append("id", this.forum.id)
+                        data.append("title", this.edit_forum_title)
+                        data.append("description", this.edit_forum_description)
+                        data.append("csrfmiddlewaretoken", '{{ csrf_token }}')
+
+                        axios.post("{% url 'edit_forum' %}", data)
+                            .then(res => {
+                                this.forum_edit_form = false;
+                                this.forum.title = this.edit_forum_title;
+                                this.forum.description = this.edit_forum_description;
+                                console.log("Successfully edited forum.");
+                            })
+                            .catch(err => console.log(err))
+                    },
+                },
                 watch: {
                     group () {
                         this.drawer = false

@@ -49,7 +49,7 @@ def edit_announcement(request):
     announcement.content = request.POST["content"]
     announcement.save()
 
-    return HttpResponse("Announcement {} edited.".format(announcement.id))
+    return HttpResponse("Announcement {}: \"{}\" edited.".format(announcement.id, announcement.title))
 
 def delete_announcement(request, id):
     if not request.user.has_perm("delete_announcement"):
@@ -57,5 +57,6 @@ def delete_announcement(request, id):
         return HttpResponse("Nice try!")
 
     announcement = Announcement.objects.get(id=id)
+    title = announcement.title
     announcement.delete()
-    return HttpResponse("Sucessfully deleted announcement {}".format(id))
+    return HttpResponse("Sucessfully deleted announcement {}: \"{}\"".format(id, title))

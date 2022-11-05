@@ -84,9 +84,9 @@
                                         {{ announcement.id }} :
                                         {
                                             "id" : "{{ announcement.id }}",
-                                            "title" : "{{ announcement.title }}",
+                                            "title" : "{{ announcement.title|escapejs }}",
 
-                                            "author_name" : "{{ announcement.author.username }}",
+                                            "author_name" : "{{ announcement.author.username|escapejs }}",
                                             "author_id" : "{{ announcement.author.id }}",
                                             "author_class" : {% if announcement.author.is_superuser %}
                                                                 "super"
@@ -95,7 +95,7 @@
                                                             {% else %}
                                                                 "user"
                                                             {% endif %},
-                                            "author_url" : "/profile/{{ announcement.author.username }}",
+                                            "author_url" : "/profile/{{ announcement.author.username|escapejs }}",
 
                                             "content" : "{{ announcement.content|escapejs }}",
                                             "can_edit" : {% if perms.UCUG.change_announcement %}
@@ -147,14 +147,10 @@
                             this.edit_announcement_id = id
                             this.edit_announcement_title = this.announcements[id].title
                             this.edit_announcement_content = this.announcements[id].content
-                        } else {
-                            this.edit_announcement_id = 0
-                            this.edit_announcement_title = ""
-                            this.edit_announcement_content = ""
                         }
                     },
                     edit_announcement() {
-                        if (!this.edit_announcement_valid) {return false}
+                        if (!this.edit_announcement_valid) return false
                         
                         announcement = this.announcements[this.edit_announcement_id]
 
@@ -167,10 +163,7 @@
                         axios.post("{% url 'edit_announcement' %}", data)
                             .then(res => {this.announcement_edit_form = false;
                                         announcement.title = this.edit_announcement_title
-                                        this.edit_announcement_title = "";
                                         announcement.content = this.edit_announcement_content
-                                        this.edit_announcement_content = "";
-                                        this.edit_announcement_id = null;
                                         console.log("Successfully edited announcement.")})
                             .catch(err => console.log(err))
                     },
