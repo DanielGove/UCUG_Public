@@ -37,7 +37,7 @@
 <v-row v-if="forum_edit_form">
     <v-card width="95%"
         class="ma-2"
-        elevation=6
+        elevation="6"
         outlined
         style="border-left: 8px solid rgb(39,86,139)">
         <v-card-title>Edit  "[[ forum.title ]]"</v-card-title>
@@ -64,8 +64,41 @@
     </v-card>
 </v-row>
 
-<!-- Search bar and other READ operations -->
-<div id="filter_container"></div>
+<v-divider></v-divider>
+<!-- Post Create & Filter functionality -->
+<v-row>
+    <v-card
+        width="95%"
+        outlined
+        class="ma-2"
+        elevation="6"
+        style="border-right: 8px solid rgb(39,86,139)">
+        <v-card-content>
+        <v-row style="border: 1px solid red"
+            class="mr-2 ml-2 mb-0 mt-0">
+            <v-col cols="8" class="pa-0">
+                <v-text-field placeholder="Search Posts"></v-text-field></v-col>
+            <v-col cols="4" class="pa-0">
+                <v-autocomplete></v-autocomplete></v-col>
+        </v-row>
+        <v-row style="border: 1px solid red"
+            class="ml-2 mr-2 mb-0 mt-0"
+            align="center">
+            <v-col cols="5" class="pa-0" style="border: 1px solid red">
+                <v-autocomplete></v-autocomplete></v-col>
+            <v-col cols="5" class="pa-0" style="border: 1px solid red">
+                <v-btn>Posts By Me</v-btn></v-col>
+            <v-col cols="2" class="pa-0" style="border: 1px solid red">
+                <v-btn fab small color="success"><v-icon>mdi-magnify</v-icon></v-btn>
+                <v-btn fab small color="info"><v-icon>mdi-pencil</v-icon></v-btn>
+            </v-col>
+        </v-row>
+    </v-card>
+</v-row>
+<v-row>
+</v-row>
+
+<v-divider></v-divider>
 
 <!-- Display Posts -->
 <div id="post_list"></div>

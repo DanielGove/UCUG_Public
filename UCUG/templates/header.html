@@ -109,7 +109,7 @@
                                 {{ forum.id }} : {
                                     "id" : {{ forum.id }},
                                     "title" : "{{ forum.title }}",
-                                    "description" : "{{ forum.description }}",
+                                    "description" : "{{ forum.description|escapejs }}",
                                     "url" : "/forum/" + "{{ forum.title }}",
 
                                     {% if forum.owner %}
