@@ -74,41 +74,41 @@
         class="ma-2"
         elevation="6"
         style="border-right: 8px solid rgb(39,86,139)">
-        <v-card-content>
-            <v-row
-                class="mr-2 ml-2 mb-0 mt-0">
-                <v-col cols="8" class="pa-0">
-                    <v-text-field
-                        placeholder="Search Posts"
-                        v-model="query_search_term"></v-text-field></v-col>
-                <v-col cols="4" class="pa-0">
-                    <v-select
-                        :items="search_by"
-                        label="Search By"
-                        v-model="query_search_by"
-                    ></v-select></v-col>
-            </v-row>
-            <v-row
-                class="ml-2 mr-2 mb-0 mt-0"
-                align="center">
-                <v-col cols="4" class="pa-0">
-                    <v-select
-                        :items="order_by"
-                        label="Order By"
-                        v-model="query_order_by">
-                        </v-select></v-col>
-                <v-col cols="8" class="pa-0 pl-7">
-                    <v-btn
-                        outlined
-                        color="rgb(39,86,139)"
-                        :elevation="query_by_me ? 9 : 4"
-                        :class="query_by_me ? 'query_button_highlight' : ''"
-                        @click="query_by_me = !query_by_me">
-                            Posts By Me</v-btn>
-                    <v-btn rounded elevation=4 color="success"><v-icon>mdi-magnify</v-icon> Search</v-btn>
-                    <v-btn elevation=4 rounded color="info"><v-icon>mdi-pencil</v-icon></v-btn></v-col>
-            </v-row>
-        </v-card-content>
+        <v-row
+            class="mr-2 ml-2 mb-0 mt-0">
+            <v-col cols="12" sm="8" class="pa-0">
+                <v-text-field
+                    placeholder="Search Posts"
+                    v-model="query_search_term"></v-text-field></v-col>
+            <v-col cols="12" sm="4" class="pa-0">
+                <v-select
+                    :items="search_by"
+                    label="Search By"
+                    v-model="query_search_by"
+                ></v-select></v-col>
+        </v-row>
+        <v-row
+            class="ml-2 mr-2 mb-0 mt-0"
+            align="center">
+            <v-col cols="12" sm="4" class="pa-0">
+                <v-select
+                    :items="order_by"
+                    label="Order By"
+                    v-model="query_order_by">
+                    </v-select></v-col>
+            <v-col cols="12" sm="4" class="d-flex justify-center pa-0 pb-2">
+                <v-btn
+                    
+                    outlined
+                    color="rgb(39,86,139)"
+                    :elevation="query_by_me ? 9 : 4"
+                    :class="query_by_me ? 'query_button_highlight' : ''"
+                    @click="query_by_me = !query_by_me">
+                        Posts By Me</v-btn></v-col>
+            <v-col cols="12" sm="4" class="d-flex justify-space-between align-center pa-0 pb-2">
+                <v-btn elevation=4 rounded color="success"><v-icon>mdi-magnify</v-icon> Search</v-btn>
+                <v-btn elevation=4 rounded color="info"><v-icon>mdi-pencil</v-icon></v-btn></v-col>
+        </v-row>
     </v-card>
 </v-row>
 <v-row>
