@@ -60,6 +60,17 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
+# A functional abstraction for requesting posts to display.
+# Parameters correspond to different query selectors on the front end.
+# params of None equates to "all"
+# page_number is used for pagination & iteratively rendering content.
+
+# How many posts to display at a time.
+PAGE_LENGTH = 15
+
+def get_posts(ordering="recent", title=None, content=None, author=None, page_number = 0):
+    pass
+
 class Comment(models.Model):
     content = models.TextField()
 

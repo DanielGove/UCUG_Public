@@ -10,6 +10,7 @@
 
         <!-- Custom UCUG Styling -->
         <link rel="stylesheet" href="/static/css/header.css">
+        <link rel="stylesheet" href="/static/css/forum.css">
 
         <!-- Vue JS -->
         <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
@@ -83,6 +84,22 @@
                     edit_forum_valid: false,
                     edit_forum_title: "",
                     edit_forum_description: "",
+
+                    order_by: [
+                        "Most Recent",
+                        "Oldest",
+                    ],
+                    search_by: [
+                        "Title & Content",
+                        "Title",
+                        "Content",
+                        "Author",
+                    ],
+
+                    query_search_term: '',
+                    query_search_by: 'Title & Content',
+                    query_order_by: 'Most Recent',
+                    query_by_me: false,
                 }),
                 methods: {
                     toggle_forum_edit_form() {
