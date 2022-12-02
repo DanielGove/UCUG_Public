@@ -4,9 +4,9 @@ Write detailed error message for registration when there is a:
     taken username
 
 Build forum pages
-    Allow update functionality for forum title and description
     Display posts
     Order/filter posts
+    Improve responsiveness of query set
     CRUD functionality for posts
     Like/Dislike posts for registered users.
 
