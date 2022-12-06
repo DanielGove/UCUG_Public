@@ -116,4 +116,5 @@ def forum_feed(request, title=None, id=None):
         "forum" : forum_data,
         "posts" : [post.public_data() for post in raw_post_data],
     }
+    print(context["posts"])
     return render(request, template_name, context=context)
