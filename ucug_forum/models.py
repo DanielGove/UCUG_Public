@@ -44,7 +44,9 @@ class Post(models.Model):
     created_UTC = models.DateTimeField(auto_now_add=True)
     updated_UTC = models.DateTimeField(auto_now=True)
 
-    parent_forum = models.ForeignKey(Forum, on_delete=models.CASCADE)
+    parent_forum = models.ForeignKey(Forum, on_delete=models.CASCADE, null=True)
+    parent_post = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
+
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     ip_owner = models.GenericIPAddressField(null=True)
 
@@ -70,6 +72,7 @@ class Post(models.Model):
             "owner_id" : owner_id,
             "owner_name" : owner_name,
             "owner_class" : owner_class,
+            "parent_post" : self.parent_post.title,
             "parent_forum" : self.parent_forum.title,
         }
         return data
@@ -85,8 +88,10 @@ class Post(models.Model):
 # How many posts to display at a time.
 PAGE_LENGTH = 15
 
-def get_posts(ordering="Most Recent", title=None, content=None, author=None, forum=None, page_number=0):
+def get_posts(ordering="Most Recent", title=None, content=None, author=None, p_forum=None, p_post=None, page_number=0):
     query = Q()
+
+    # Filter by post contents
     if title and content:
         query &= Q(title__contains=title)
         query |= Q(content__icontains=content)
@@ -95,13 +100,17 @@ def get_posts(ordering="Most Recent", title=None, content=None, author=None, for
     elif content:
         query &= Q(content__icontains=content)
     
+    # Filter by author
     if author:
         query &= Q(owner__username__icontains=author)
 
-    if forum:
-        query &= Q(parent_forum__id=forum)
+    # Filter by location
+    if p_forum:
+        query &= Q(parent_forum__id=p_forum)
+    elif p_post:
+        query &= Q(parent_post__id=p_post)
 
-    # IMPLEMENT ORDER BY
+    # Make the constructed query with the wanted ordering
     if ordering == "Most Recent":
         posts = Post.objects.filter(query).order_by("-created_UTC")
     elif ordering == "Oldest":
