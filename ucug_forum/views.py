@@ -3,7 +3,7 @@ from django.shortcuts import render
 import json
 
 from UCUG.models import record_session
-from ucug_forum.models import Forum
+from ucug_forum.models import Forum, Post, get_posts
 
 def create_forum(request):
     # Check if the user can make forums
@@ -36,6 +36,41 @@ def edit_forum(request):
 
     return HttpResponse("Forum {}: \"{}\" edited.".format(forum.id, forum.title))
 
+def create_post(request):
+    if request.user.is_authenticated:
+        owner = request.user
+    else:
+        owner = None
+
+    # Get the poster's IP Address
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+
+    # Find parent forum
+    parent_forum = Forum.objects.get(id=request.POST["forum"])
+
+    post = Post(title=request.POST["title"],
+                content=request.POST["content"],
+                parent_forum=parent_forum,
+                owner=owner,
+                ip_owner=ip)
+    post.save()
+
+    post_data = post.public_data()
+    return HttpResponse(json.dumps([post_data]))
+
+def get_posts_view(request):
+    raw_post_data = get_posts(
+        request.GET.get("ordering"),
+        request.GET.get("title"),
+        request.GET.get("content"),
+        request.GET.get("author"),
+        request.GET.get("forum"))
+    return HttpResponse(json.dumps([post.public_data() for post in raw_post_data]))
+
 def forum_feed(request, title=None, id=None):
     record_session(request)
     template_name = "forum_feed.html"
@@ -55,7 +90,9 @@ def forum_feed(request, title=None, id=None):
             "<a href='/home'>home page</a>.")
 
     forum_data = forum.public_data()
+    raw_post_data = get_posts(forum=forum_data["id"])
     context = {
         "forum" : forum_data,
+        "posts" : [post.public_data() for post in raw_post_data],
     }
     return render(request, template_name, context=context)

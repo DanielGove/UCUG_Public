@@ -9,4 +9,6 @@ urlpatterns = [
     path("forum/<str:title>/", views.forum_feed, name="forum_feed"),
     path("forum/<int:id>/", views.forum_feed),
     path("edit_forum/", views.edit_forum, name="edit_forum"),
+    path("create_post/", views.create_post, name="create_post"),
+    path("get_posts/", views.get_posts_view, name="get_posts"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
