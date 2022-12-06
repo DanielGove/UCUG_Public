@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
@@ -48,12 +49,21 @@ class Post(models.Model):
     ip_owner = models.GenericIPAddressField(null=True)
 
     def public_data(self):
+        if self.owner.is_superuser:
+            owner_class = "super"
+        elif self.owner.is_staff:
+            owner_class = "staff"
+        else:
+            owner_class = "user"
+
         data = {
             "id" : self.id,
             "title" : self.title,
             "content" : self.content,
-            "owner" : self.owner,
-            "forum" : self.parent_forum,
+            "owner_id" : self.owner.id,
+            "owner_name" : self.owner.username,
+            "owner_class" : owner_class,
+            "parent_forum" : self.parent_forum.title,
         }
         return data
 
@@ -68,8 +78,31 @@ class Post(models.Model):
 # How many posts to display at a time.
 PAGE_LENGTH = 15
 
-def get_posts(ordering="recent", title=None, content=None, author=None, page_number = 0):
-    pass
+def get_posts(ordering="Most Recent", title=None, content=None, author=None, forum=None, page_number=0):
+    query = Q()
+    if title and content:
+        query &= Q(title__contains=title)
+        query |= Q(content__icontains=content)
+    elif title:
+        query &= Q(title__icontains=title)
+    elif content:
+        query &= Q(content__icontains=content)
+    
+    if author:
+        query &= Q(owner__username__icontains=author)
+
+    if forum:
+        query &= Q(parent_forum__id=forum)
+
+    # IMPLEMENT ORDER BY
+    if ordering == "Most Recent":
+        posts = Post.objects.filter(query).order_by("created_UTC")
+    elif ordering == "Oldest":
+        posts = Post.objects.filter(query).order_by("-created_UTC")
+    else:
+        posts = Post.objects.filter(query)
+
+    return posts
 
 class Comment(models.Model):
     content = models.TextField()

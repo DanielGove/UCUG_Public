@@ -39,7 +39,7 @@
         class="ma-2"
         elevation="6"
         outlined
-        style="border-left: 8px solid rgb(39,86,139)">
+        style="border-right: 8px solid rgb(39,86,139)">
         <v-card-title>Edit  "[[ forum.title ]]"</v-card-title>
 
         <!-- The Form -->
@@ -63,8 +63,8 @@
         </v-card-actions>
     </v-card>
 </v-row>
-
 <v-divider></v-divider>
+
 <!-- Post Create & Filter functionality -->
 <v-row>
     <v-card
@@ -106,15 +106,40 @@
                     @click="query_by_me = !query_by_me">
                         Posts By Me</v-btn></v-col>
             <v-col cols="12" sm="4" class="d-flex justify-space-between align-center pa-0 pb-2">
-                <v-btn elevation=4 rounded color="success"><v-icon>mdi-magnify</v-icon> Search</v-btn>
-                <v-btn elevation=4 rounded color="info"><v-icon>mdi-pencil</v-icon></v-btn></v-col>
+                <v-btn elevation=4 rounded color="success" @click=""><v-icon>mdi-magnify</v-icon> Search</v-btn>
+                <v-btn elevation=4 rounded color="info" @click="toggle_post_create_form"><v-icon>mdi-pencil</v-icon></v-btn></v-col>
         </v-row>
     </v-card>
 </v-row>
-<v-row>
-</v-row>
-
 <v-divider></v-divider>
+
+<!-- Write Post -->
+<v-row v-if="post_create_form">
+    <v-card width="95%"
+        class="ma-2"
+        elevation="6"
+        outlined
+        style="border-right: 8px solid rgb(39,86,139)">
+        <v-card-title>Create Post</v-card-title>
+        <v-card-text class="pb-0">
+            <v-form v-model="create_post_valid">
+                <v-text-field v-model="create_post_title"
+                    label="Title"
+                    placeholder="Title"
+                    :rules="title_rules"></v-text-field>
+                <v-textarea v-model="create_post_content"
+                    label="Content"
+                    placeholder="Content"
+                    :rules="content_rules"></v-textarea>
+            </v-form>
+        </v-card-content>
+        <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="success" @click="create_post">Create</v-btn>
+            <v-btn color="error" @click="toggle_post_create_form">Cancel</v-btn>
+        </v-card-actions>
+    </v-card>
+</v-row>
 
 <!-- Display Posts -->
 <div id="post_list"></div>
