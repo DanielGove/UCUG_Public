@@ -171,6 +171,30 @@
         <v-card-text>
             [[ post.content ]]
         </v-card-text>
+
+
+        <v-card-text v-if="post.edit">
+            <v-form v-model="post.form_valid">
+                <v-text-field v-model="post.edit_title"
+                    :rules="title_rules"></v-text-field>
+                <v-textarea v-model="post.edit_content"
+                    :rules="content_rules"></v-textarea>
+            </v-form>
+        </v-card-text>
+
+        <v-card-actions>
+            <v-btn v-if="('{{user.username|escapejs}}' == post.owner_name) && !post.edit"
+                color="info"
+                @click="post.edit = !post.edit"><v-icon>mdi-pencil</v-icon></v-btn>
+            <v-btn v-if="('{{user.username|escapejs}}' == post.owner_name) && !post.edit"
+                color="error"
+                @click="delete_post(post.id)"><v-icon>mdi-delete</v-icon></v-btn>
+            <v-btn v-if="post.edit" color="success" @click="edit_post(post.id, post.edit_title, post.edit_content)">Edit</v-btn>
+            <v-btn v-if="post.edit" color="error" @click="post.edit=false">Cancel</v-btn>
+            <v-spacer></v-spacer>
+            <v-btn color="info"><v-icon>mdi-reply-all</v-icon>Reply</v-btn>
+            <v-btn small fab color="info"><v-icon>mdi-chevron-double-down</v-icon></v-btn>
+        </v-card-actions>
     </v-card>
 </v-row>
 

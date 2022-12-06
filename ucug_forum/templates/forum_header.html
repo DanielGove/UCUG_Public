@@ -90,8 +90,9 @@
                     edit_forum_title: "",
                     edit_forum_description: "",
 
-                    posts: [
+                    posts: {
                         {% for post in posts %}
+                        {{ post.id }}:
                         {
                             "id" : {{ post.id }},
                             "title" : "{{ post.title|escapejs }}",
@@ -101,9 +102,14 @@
                             "owner_class" : "{{ post.owner_class }}",
                             "owner_url" : "/profile/{{ post.owner_name|escapejs }}",
                             "parent_forum" : "{{ post.parent_forum|escapejs }}",
+
+                            "edit" : false,
+                            "form_valid" : false,
+                            "edit_title" : "{{ post.title|escapejs }}",
+                            "edit_content" : "{{ post.content|escapejs }}",
                         },
                         {% endfor %}
-                    ],
+                    },
 
                     order_by: [
                         "Most Recent",
@@ -176,6 +182,34 @@
                                 this.search_posts();
                             })
                             .catch(err => console.log(err))
+                    },
+                    edit_post(id, title, content) {
+                        if (!this.posts[id].form_valid) return false
+
+                        data = new FormData()
+                        data.append("id", id)
+                        data.append("title", title)
+                        data.append("content", content)
+                        data.append("csrfmiddlewaretoken", "{{csrf_token}}")
+                        console.log(data)
+                        axios.post({% url 'edit_post' %}, data)
+                            .then(res => {
+                                this.posts[id].title = title;
+                                this.posts[id].content = content;
+                                this.posts[id].edit = false;
+                                console.log("Post successfully edited.");
+                            })
+                            .catch(err => console.log(err))
+                    },
+                    delete_post(id) {
+                        data = new FormData()
+                        data.append("id", id)
+                        data.append("csrfmiddlewaretoken", "{{csrf_token}}")
+
+                        axios.post({% url 'delete_post' %}, data)
+                            .then(res => {console.log(res.data)})
+                            .catch(err => console.log(err))   
+                        Vue.delete(this.posts, id)
                     },
 
                     search_posts() {
