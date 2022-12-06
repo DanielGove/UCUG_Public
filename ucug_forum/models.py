@@ -72,8 +72,8 @@ class Post(models.Model):
             "owner_id" : owner_id,
             "owner_name" : owner_name,
             "owner_class" : owner_class,
-            "parent_post" : self.parent_post.title,
-            "parent_forum" : self.parent_forum.title,
+            "parent_post" : self.parent_post.title if self.parent_post else None,
+            "parent_forum" : self.parent_forum.title if self.parent_forum else None,
         }
         return data
 
