@@ -153,6 +153,7 @@
         <v-card-title>
             [[ post.title ]]
             <v-spacer></v-spacer>
+
             <!-- Owner Tag -->
             <v-chip v-if="post.owner_class == 'super'" 
                 :href="post.owner_url" color="orange" text-color="white">
@@ -162,7 +163,7 @@
                 :href="post.owner_url" color="success" text-color="white">
                 <v-icon left>mdi-shield-account</v-icon>[[ post.owner_name ]]
             </v-chip>
-            <v-chip v-if="post.owner_class == 'user'"
+            <v-chip v-if="post.owner_class == 'user' && post.owner_id"
                 :href="post.owner_url" color="info" text-color="white">
                 <v-icon left>mdi-account</v-icon>[[ post.owner_name ]]
             </v-chip>
