@@ -101,6 +101,7 @@
                             "owner_class" : "{{ post.owner_class }}",
                             "owner_url" : "/profile/{{ post.owner_name|escapejs }}",
                             "parent_forum" : "{{ post.parent_forum|escapejs }}",
+                            "parent_post" : "{{ post.parent_post|escapejs }}",
 
                             "edit" : false,
                             "form_valid" : false,
@@ -220,6 +221,16 @@
                         Vue.delete(this.posts, index)
                     },
 
+                    build_post_data(posts) {
+                        posts.forEach(function (post, index) {
+                            post["owner_url"] = "/profile/" + post["owner_name"];
+                            post["edit"] = false;
+                            post["form_valid"] = false;
+                            post["edit_title"] = post["title"];
+                            post["edit_content"] = post['content'];
+                        });
+                        this.posts = posts;
+                    },
                     search_posts() {
                         let data = {}
                         data.ordering = this.query_order_by;
@@ -249,7 +260,7 @@
                         axios.get("/get_posts/", {params: data})
                             .then(res => {
                                 // Display the new posts!
-                                this.posts = res.data;
+                                this.build_post_data(res.data);
                             })
                             .catch(err => console.log(err))
                     },
