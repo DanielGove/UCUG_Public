@@ -62,6 +62,27 @@ def create_post(request):
     post_data = post.public_data()
     return HttpResponse(json.dumps([post_data]))
 
+def edit_post(request):
+    post = Post.objects.get(id=request.POST["id"])
+    if not post.owner_id == request.user.id:
+        record_session(request, "NO_AUTH")
+        return HttpResponse("Nice Try!")
+    
+    post.title = request.POST["title"]
+    post.content = request.POST["content"]
+    post.save()
+
+    print(request.POST)
+    return HttpResponse(json.dumps(post.public_data()))
+
+def delete_post(request):
+    post = Post.objects.get(id=request.POST["id"])
+    if not post.owner_id == request.user.id:
+        record_session(request, "NO_AUTH")
+        return HttpResponse("Nice Try!")
+    post.delete()
+    return HttpResponse("Post deleted.")
+
 def get_posts_view(request):
     raw_post_data = get_posts(
         request.GET.get("ordering"),
@@ -95,4 +116,5 @@ def forum_feed(request, title=None, id=None):
         "forum" : forum_data,
         "posts" : [post.public_data() for post in raw_post_data],
     }
+    print(context["posts"])
     return render(request, template_name, context=context)

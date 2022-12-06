@@ -103,9 +103,9 @@ def get_posts(ordering="Most Recent", title=None, content=None, author=None, for
 
     # IMPLEMENT ORDER BY
     if ordering == "Most Recent":
-        posts = Post.objects.filter(query).order_by("created_UTC")
-    elif ordering == "Oldest":
         posts = Post.objects.filter(query).order_by("-created_UTC")
+    elif ordering == "Oldest":
+        posts = Post.objects.filter(query).order_by("created_UTC")
     else:
         posts = Post.objects.filter(query)
 

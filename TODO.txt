@@ -4,11 +4,9 @@ Write detailed error message for registration when there is a:
     taken username
 
 Build forum pages
-    Display posts
-    Order/filter posts
-    Improve responsiveness of query set
-    CRUD functionality for posts
     Like/Dislike posts for registered users.
+    Reply to posts and replies.
+    Conditional rendering of replies.
 
 Build post pages.
     Allow update functionality for post title and content

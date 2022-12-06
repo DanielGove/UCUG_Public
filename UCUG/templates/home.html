@@ -109,6 +109,7 @@
             </v-card-text>
 
             <v-card-actions v-if="announcement.can_edit">
+                <v-spacer></v-spacer>
                 <v-btn v-on:click="toggle_announcement_edit_form(announcement.id)" small class="mx-1" fab color="info"><v-icon>mdi-pencil</v-icon></v-btn>
                 <v-btn v-on:click="delete_announcement(announcement.id)" small class="mx-1" fab color="error"><v-icon>mdi-delete</v-icon></v-btn>
             </v-card-actions>
