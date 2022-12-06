@@ -184,19 +184,27 @@
                             .catch(err => console.log(err))
                     },
                     edit_post(id, title, content) {
-                        if (!this.posts[id].form_valid) return false
+                        index = 0;
+                        while (index < this.posts.length) {
+                            if (this.posts[index].id == id) {
+                                break;
+                            } else {
+                                index += 1
+                            }
+                        }
+                        if (!this.posts[index].form_valid) return false
 
                         data = new FormData()
                         data.append("id", id)
                         data.append("title", title)
                         data.append("content", content)
                         data.append("csrfmiddlewaretoken", "{{csrf_token}}")
-                        console.log(data)
+
                         axios.post({% url 'edit_post' %}, data)
                             .then(res => {
-                                this.posts[id].title = title;
-                                this.posts[id].content = content;
-                                this.posts[id].edit = false;
+                                this.posts[index].title = title;
+                                this.posts[index].content = content;
+                                this.posts[index].edit = false;
                                 console.log("Post successfully edited.");
                             })
                             .catch(err => console.log(err))
