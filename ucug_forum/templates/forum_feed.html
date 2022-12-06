@@ -106,7 +106,7 @@
                     @click="query_by_me = !query_by_me">
                         Posts By Me</v-btn></v-col>
             <v-col cols="12" sm="4" class="d-flex justify-space-between align-center pa-0 pb-2">
-                <v-btn elevation=4 rounded color="success" @click=""><v-icon>mdi-magnify</v-icon> Search</v-btn>
+                <v-btn elevation=4 rounded color="success" @click="search_posts"><v-icon>mdi-magnify</v-icon> Search</v-btn>
                 <v-btn elevation=4 rounded color="info" @click="toggle_post_create_form"><v-icon>mdi-pencil</v-icon></v-btn></v-col>
         </v-row>
     </v-card>
@@ -142,6 +142,36 @@
 </v-row>
 
 <!-- Display Posts -->
-<div id="post_list"></div>
+<v-row v-for="post in posts">
+    <v-spacer></v-spacer>
+    <v-card outlined
+            width="95%"
+            elevation="6"
+            class="ma-2 rounded-lg"
+            style="text-decoration: none;
+                    border-left: 8px solid rgb(39,86,139)">
+        <v-card-title>
+            [[ post.title ]]
+            <v-spacer></v-spacer>
+            <!-- Owner Tag -->
+            <v-chip v-if="post.owner_class == 'super'" 
+                :href="post.owner_url" color="orange" text-color="white">
+                <v-icon left>mdi-shield-star</v-icon>[[ post.owner_name ]]
+            </v-chip>
+            <v-chip v-if="post.owner_class == 'staff'"
+                :href="post.owner_url" color="success" text-color="white">
+                <v-icon left>mdi-shield-account</v-icon>[[ post.owner_name ]]
+            </v-chip>
+            <v-chip v-if="post.owner_class == 'user'"
+                :href="post.owner_url" color="info" text-color="white">
+                <v-icon left>mdi-account</v-icon>[[ post.owner_name ]]
+            </v-chip>
+        </v-card-title>
+
+        <v-card-text>
+            [[ post.content ]]
+        </v-card-text>
+    </v-card>
+</v-row>
 
 {% endblock%}

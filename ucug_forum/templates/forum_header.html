@@ -99,6 +99,7 @@
                             "owner_id" : {{ post.owner_id }},
                             "owner_name" : "{{ post.owner_name|escapejs }}",
                             "owner_class" : "{{ post.owner_class }}",
+                            "owner_url" : "/profile/{{ post.owner_name|escapejs }}",
                             "parent_forum" : "{{ post.parent_forum|escapejs }}",
                         },
                         {% endfor %}
@@ -158,18 +159,55 @@
                     create_post() {
                         if (!this.create_post_valid) return false;
 
-                        let data = new FormData()
-                        data.append("title", this.create_post_title)
-                        data.append("content", this.create_post_content)
-                        data.append("forum", this.forum["id"])
-                        data.append("csrfmiddlewaretoken", '{{ csrf_token }}')
+                        let data = new FormData();
+                        data.append("title", this.create_post_title);
+                        data.append("content", this.create_post_content);
+                        data.append("forum", this.forum["id"]);
+                        data.append("csrfmiddlewaretoken", '{{ csrf_token }}');
 
                         axios.post("{% url 'create_post' %}", data)
                             .then(res => {
                                 this.post_create_form = false;
                                 this.create_post_title = "";
                                 this.create_post_content = "";
-                                console.log("Successfully created post.")
+                                console.log("Successfully created post.");
+
+                                // Reload posts
+                                this.search_posts();
+                            })
+                            .catch(err => console.log(err))
+                    },
+
+                    search_posts() {
+                        let data = {}
+                        data.ordering = this.query_order_by;
+                        data.forum = this.forum["id"];
+                        if (this.query_search_by == "Title & Content") {
+                            data.title = this.query_search_term;
+                            data.content = this.query_search_term;
+                            data.author = "";
+                        } else if (this.query_search_by == "Title") {
+                            data.title = this.query_search_by;
+                            data.content = "";
+                            data.author = "";
+                        } else if (this.query_search_by == "Content") {
+                            data.title = "";
+                            data.content = this.query_search_term;
+                            data.author = "";
+                        } else {
+                            data.title = "";
+                            data.content = "";
+                            data.author = this.query_search_term;
+                        }
+
+                        if (this.query_by_me && "{{ request.user.username|escapejs }}") {
+                            data.author = "{{ request.user.username|escapejs }}";
+                        }
+
+                        axios.get("/get_posts/", {params: data})
+                            .then(res => {
+                                // Display the new posts!
+                                this.posts = res.data;
                             })
                             .catch(err => console.log(err))
                     },

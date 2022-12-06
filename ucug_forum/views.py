@@ -37,7 +37,7 @@ def edit_forum(request):
     return HttpResponse("Forum {}: \"{}\" edited.".format(forum.id, forum.title))
 
 def create_post(request):
-    if request.user:
+    if request.user.is_authenticated:
         owner = request.user
     else:
         owner = None
@@ -61,6 +61,15 @@ def create_post(request):
 
     post_data = post.public_data()
     return HttpResponse(json.dumps([post_data]))
+
+def get_posts_view(request):
+    raw_post_data = get_posts(
+        request.GET.get("ordering"),
+        request.GET.get("title"),
+        request.GET.get("content"),
+        request.GET.get("author"),
+        request.GET.get("forum"))
+    return HttpResponse(json.dumps([post.public_data() for post in raw_post_data]))
 
 def forum_feed(request, title=None, id=None):
     record_session(request)
