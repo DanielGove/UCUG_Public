@@ -49,12 +49,18 @@ def create_post(request):
     else:
         ip = request.META.get('REMOTE_ADDR')
 
-    # Find parent forum
-    parent_forum = Forum.objects.get(id=request.POST["forum"])
+    # Find parent forum or post
+    try:
+        parent_forum = Forum.objects.get(id=request.POST["p_forum"])
+        parent_post = None
+    except:
+        parent_forum = None
+        parent_post = Post.objects.get(id=request.POST["p_post"])
 
     post = Post(title=request.POST["title"],
                 content=request.POST["content"],
                 parent_forum=parent_forum,
+                parent_post=parent_post,
                 owner=owner,
                 ip_owner=ip)
     post.save()
@@ -89,7 +95,8 @@ def get_posts_view(request):
         request.GET.get("title"),
         request.GET.get("content"),
         request.GET.get("author"),
-        request.GET.get("forum"))
+        request.GET.get("p_forum"),
+        request.GET.get("p_post"))
     return HttpResponse(json.dumps([post.public_data() for post in raw_post_data]))
 
 def forum_feed(request, title=None, id=None):
@@ -111,7 +118,7 @@ def forum_feed(request, title=None, id=None):
             "<a href='/home'>home page</a>.")
 
     forum_data = forum.public_data()
-    raw_post_data = get_posts(forum=forum_data["id"])
+    raw_post_data = get_posts(p_forum=forum_data["id"])
     context = {
         "forum" : forum_data,
         "posts" : [post.public_data() for post in raw_post_data],

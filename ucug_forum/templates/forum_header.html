@@ -90,6 +90,10 @@
                     edit_forum_title: "",
                     edit_forum_description: "",
 
+                    reply_valid: false,
+                    reply_id: 0,
+                    reply_title: "",
+                    reply_content: "",
                     posts: [
                         {% for post in posts %}
                         {
@@ -101,11 +105,17 @@
                             "owner_class" : "{{ post.owner_class }}",
                             "owner_url" : "/profile/{{ post.owner_name|escapejs }}",
                             "parent_forum" : "{{ post.parent_forum|escapejs }}",
+                            "parent_post" : "{{ post.parent_post|escapejs }}",
+
+                            "expanded" : false,
+                            "children" : [],
 
                             "edit" : false,
                             "form_valid" : false,
                             "edit_title" : "{{ post.title|escapejs }}",
                             "edit_content" : "{{ post.content|escapejs }}",
+
+                            "reply" : false,
                         },
                         {% endfor %}
                     ],
@@ -167,7 +177,7 @@
                         let data = new FormData();
                         data.append("title", this.create_post_title);
                         data.append("content", this.create_post_content);
-                        data.append("forum", this.forum["id"]);
+                        data.append("p_forum", this.forum["id"]);
                         data.append("csrfmiddlewaretoken", '{{ csrf_token }}');
 
                         axios.post("{% url 'create_post' %}", data)
@@ -182,20 +192,20 @@
                             })
                             .catch(err => console.log(err))
                     },
-                    edit_post(id, title, content) {
-                        if (!this.posts[id].form_valid) return false
+                    edit_post(post) {
+                        if (!post.form_valid) return false
 
                         data = new FormData()
-                        data.append("id", id)
-                        data.append("title", title)
-                        data.append("content", content)
+                        data.append("id", post.id)
+                        data.append("title", post.edit_title)
+                        data.append("content", post.edit_content)
                         data.append("csrfmiddlewaretoken", "{{csrf_token}}")
-                        console.log(data)
+
                         axios.post({% url 'edit_post' %}, data)
                             .then(res => {
-                                this.posts[id].title = title;
-                                this.posts[id].content = content;
-                                this.posts[id].edit = false;
+                                post.title = post.edit_title;
+                                post.content = post.edit_content;
+                                post.edit = false;
                                 console.log("Post successfully edited.");
                             })
                             .catch(err => console.log(err))
@@ -220,10 +230,66 @@
                         Vue.delete(this.posts, index)
                     },
 
+                    toggle_reply(post) {
+                        if (this.reply_id == post.id) {
+                            this.reply_id = 0;
+                        } else {
+                            this.reply_id = post.id;
+                            this.reply_title = "";
+                            this.reply_content = "";
+
+                            post.edit = false;
+                        }
+                    },
+                    create_reply(post) {
+                        let data = new FormData();
+                        data.append("p_post", post.id);
+                        data.append("title", this.reply_title);
+                        data.append("content", this.reply_content);
+                        data.append("csrfmiddlewaretoken", "{{csrf_token}}");
+
+                        axios.post({% url 'create_post' %}, data)
+                            .then(res => {
+                                this.expand_post(post, true);
+                                this.toggle_reply(post);
+                                console.log("Reply Successful.")
+                            })
+                            .catch(err => console.log(err))
+                    },
+
+                    build_post_data(posts) {
+                        posts.forEach(function (post, index) {
+                            post.owner_url = "/profile/" + post.owner_name;
+                            post.edit = false;
+                            post.form_valid = false;
+                            post.edit_title = post.title;
+                            post.edit_content = post.content;
+
+                            post.reply = false;
+                            post.expanded = false;
+                            post.children = [];
+                        });
+                        return posts;
+                    },
+                    expand_post(post, force=false) {
+                        if (post.expanded && !force) {
+                            post.expanded = false;
+                            return 0
+                        }
+
+                        // Grab children posts.
+                        axios.get("/get_posts/", {params: {p_post: post.id}})
+                            .then(res => {
+                                post.expanded = true;
+                                post.children = this.build_post_data(res.data);
+                            })
+                            .catch(err => {console.log(err);console.log("Could not expand post.");})
+                        return 0;
+                    },
                     search_posts() {
                         let data = {}
                         data.ordering = this.query_order_by;
-                        data.forum = this.forum["id"];
+                        data.p_forum = this.forum["id"];
                         if (this.query_search_by == "Title & Content") {
                             data.title = this.query_search_term;
                             data.content = this.query_search_term;
@@ -249,7 +315,7 @@
                         axios.get("/get_posts/", {params: data})
                             .then(res => {
                                 // Display the new posts!
-                                this.posts = res.data;
+                                this.posts = this.build_post_data(res.data);
                             })
                             .catch(err => console.log(err))
                     },

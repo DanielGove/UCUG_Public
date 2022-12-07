@@ -172,29 +172,67 @@
             [[ post.content ]]
         </v-card-text>
 
-
+        <!-- Edit Post -->
         <v-card-text v-if="post.edit">
+            <v-divider></v-divider>
+            <v-card-title class="pa-0 pl-2">Edit Post</v-card-title>
             <v-form v-model="post.form_valid">
                 <v-text-field v-model="post.edit_title"
+                    label="Title"
                     :rules="title_rules"></v-text-field>
                 <v-textarea v-model="post.edit_content"
+                    label="Content"
                     :rules="content_rules"></v-textarea>
             </v-form>
         </v-card-text>
 
-        <v-card-actions>
+        <!-- Write a Reply -->
+        <v-card-text v-if="reply_id == post.id" class="pa-0 pl-2 pr-2">
+            <v-divider></v-divider>
+            <v-card-title class="pa-0 pl-2">Write a Reply</v-card-title>
+            <v-form v-model="reply_valid" class="pl-2 pr-2">
+                <v-text-field
+                    label="Title"
+                    :rules="title_rules"
+                    v-model="reply_title"></v-text-field>
+                <v-textarea
+                    label="Content"
+                    :rules="content_rules"
+                    v-model="reply_content"></v-textarea>
+            </v-form>
+        </v-card-text>
+
+        <!-- Actions depend on state MIGHT NEED REWORK -->
+        <v-card-actions v-if="reply_id != post.id">
             <v-btn v-if="('{{user.username|escapejs}}' == post.owner_name) && !post.edit"
                 color="info"
-                @click="post.edit = !post.edit"><v-icon>mdi-pencil</v-icon></v-btn>
+                @click="post.edit = !post.edit; reply_id=0;"><v-icon>mdi-pencil</v-icon></v-btn>
             <v-btn v-if="('{{user.username|escapejs}}' == post.owner_name) && !post.edit"
                 color="error"
                 @click="delete_post(post.id)"><v-icon>mdi-delete</v-icon></v-btn>
-            <v-btn v-if="post.edit" color="success" @click="edit_post(post.id, post.edit_title, post.edit_content)">Edit</v-btn>
+            <v-btn v-if="post.edit" color="success" @click="edit_post(post)">Edit</v-btn>
             <v-btn v-if="post.edit" color="error" @click="post.edit=false">Cancel</v-btn>
             <v-spacer></v-spacer>
-            <v-btn color="info"><v-icon>mdi-reply-all</v-icon>Reply</v-btn>
-            <v-btn small fab color="info"><v-icon>mdi-chevron-double-down</v-icon></v-btn>
+            <v-btn color="info" @click="toggle_reply(post)"><v-icon>mdi-reply-all</v-icon>Reply</v-btn>
+            <v-btn small fab color="info" @click="expand_post(post)"><v-icon>mdi-chevron-double-down</v-icon></v-btn>
         </v-card-actions>
+        <v-card-actions v-if="reply_id == post.id">
+            <v-btn color="success" @click="create_reply(post)">Reply</v-btn>
+            <v-btn color="error" @click="toggle_reply(post)">Cancel</v-btn>
+            <v-spacer></v-spacer>
+            <v-btn small fab color="info" @click="expand_post(post)"><v-icon>mdi-chevron-double-down</v-icon></v-btn>
+        </v-card-actions>
+
+        <!-- Expanded Content -->
+        <v-card-text v-if="post.expanded">
+            <v-card-title v-if="post.children.length == 0">
+            Nothing to see here.
+            </v-card-title>
+            <v-divider v-if="post.children.length > 0"></v-divider>
+            <v-row v-for="child in post.children">
+                [[child.title]]
+            </v-row>
+        </v-card-text>
     </v-card>
 </v-row>
 
