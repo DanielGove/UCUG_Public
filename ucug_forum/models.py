@@ -44,6 +44,7 @@ class Post(models.Model):
     created_UTC = models.DateTimeField(auto_now_add=True)
     updated_UTC = models.DateTimeField(auto_now=True)
 
+    mentions = models.ForeignKey('self', related_name="post_mention", on_delete=models.SET_NULL, null=True)
     parent_forum = models.ForeignKey(Forum, on_delete=models.CASCADE, null=True)
     parent_post = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
 

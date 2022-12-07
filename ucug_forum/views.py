@@ -89,7 +89,8 @@ def get_posts_view(request):
         request.GET.get("title"),
         request.GET.get("content"),
         request.GET.get("author"),
-        request.GET.get("forum"))
+        request.GET.get("p_forum"),
+        request.GET.get("p_post"))
     return HttpResponse(json.dumps([post.public_data() for post in raw_post_data]))
 
 def forum_feed(request, title=None, id=None):

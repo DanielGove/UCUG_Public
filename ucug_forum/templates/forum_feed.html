@@ -189,12 +189,22 @@
             <v-btn v-if="('{{user.username|escapejs}}' == post.owner_name) && !post.edit"
                 color="error"
                 @click="delete_post(post.id)"><v-icon>mdi-delete</v-icon></v-btn>
-            <v-btn v-if="post.edit" color="success" @click="edit_post(post.id, post.edit_title, post.edit_content)">Edit</v-btn>
+            <v-btn v-if="post.edit" color="success" @click="edit_post(post)">Edit</v-btn>
             <v-btn v-if="post.edit" color="error" @click="post.edit=false">Cancel</v-btn>
             <v-spacer></v-spacer>
             <v-btn color="info"><v-icon>mdi-reply-all</v-icon>Reply</v-btn>
-            <v-btn small fab color="info"><v-icon>mdi-chevron-double-down</v-icon></v-btn>
+            <v-btn small fab color="info" @click="expand_post(post)"><v-icon>mdi-chevron-double-down</v-icon></v-btn>
         </v-card-actions>
+
+        <!-- Expanded Content -->
+        <v-card-text v-if="post.expanded">
+            <v-card-title v-if="!post.children">
+            Nothing to see here.
+            </v-card-title>
+            <v-row v-for="child in post.children">
+            [[child.title]]
+            </v-row>
+        </v-card-text>
     </v-card>
 </v-row>
 
