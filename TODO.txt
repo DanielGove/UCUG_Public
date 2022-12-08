@@ -1,3 +1,4 @@
+Rework card action rendering for posts in forum.
 
 Write detailed error message for registration when there is a:
     invalid password

@@ -49,12 +49,18 @@ def create_post(request):
     else:
         ip = request.META.get('REMOTE_ADDR')
 
-    # Find parent forum
-    parent_forum = Forum.objects.get(id=request.POST["forum"])
+    # Find parent forum or post
+    try:
+        parent_forum = Forum.objects.get(id=request.POST["p_forum"])
+        parent_post = None
+    except:
+        parent_forum = None
+        parent_post = Post.objects.get(id=request.POST["p_post"])
 
     post = Post(title=request.POST["title"],
                 content=request.POST["content"],
                 parent_forum=parent_forum,
+                parent_post=parent_post,
                 owner=owner,
                 ip_owner=ip)
     post.save()
