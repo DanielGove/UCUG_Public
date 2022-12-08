@@ -8,6 +8,9 @@ Build forum pages
     Conditional rendering of replies.
     Timestamps for posts and replies.
 
+Profile pages
+    Add a content feed to profile pages (links to posts)
+
 Build post pages.
     Allow update functionality for post title and content
     Display comments.
