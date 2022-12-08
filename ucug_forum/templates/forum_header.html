@@ -186,7 +186,7 @@
                             .catch(err => console.log(err))
                     },
                     edit_post(post) {
-                        if (!edit_post_valid) return false
+                        if (!this.edit_post_valid) return false
                         
                         data = new FormData()
                         data.append("id", this.edit_post_id)
@@ -196,6 +196,7 @@
 
                         axios.post({% url 'edit_post' %}, data)
                             .then(res => {
+                                this.edit_post_id = 0;
                                 post.title = this.edit_post_title;
                                 post.content = this.edit_post_content;
                                 console.log("Post successfully edited.");
@@ -232,7 +233,7 @@
                         axios.post({% url 'create_post' %}, data)
                             .then(res => {
                                 this.expand_post(post, true);
-                                this.toggle_reply(post);
+                                this.reply_id = 0;
                                 console.log("Reply Successful.")
                             })
                             .catch(err => console.log(err))
