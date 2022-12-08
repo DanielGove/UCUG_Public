@@ -1,13 +1,12 @@
-Rework card action rendering for posts in forum.
-
 Write detailed error message for registration when there is a:
     invalid password
     taken username
 
 Build forum pages
     Like/Dislike posts for registered users.
-    Reply to posts and replies.
+    Reply to posts and replies (mentions).
     Conditional rendering of replies.
+    Timestamps for posts and replies.
 
 Build post pages.
     Allow update functionality for post title and content
