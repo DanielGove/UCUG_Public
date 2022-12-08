@@ -4,7 +4,7 @@
         <!-- Required meta tags -->
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        
+
         <!-- Custom UCUG Styling -->
         <link rel="stylesheet" href="/static/css/header.css">
         <link rel="stylesheet" href="/static/css/forum.css">
@@ -222,6 +222,7 @@
 
                     create_reply(post) {
                         let data = new FormData();
+                        data.append("p_forum", null);
                         data.append("p_post", post.id);
                         data.append("title", this.reply_title);
                         data.append("content", this.reply_content);
@@ -263,7 +264,8 @@
                     search_posts() {
                         let data = {}
                         data.ordering = this.query_order_by;
-                        data.forum = this.forum["id"];
+                        data.p_forum = this.forum["id"];
+                        data.p_post = null;
                         if (this.query_search_by == "Title & Content") {
                             data.title = this.query_search_term;
                             data.content = this.query_search_term;

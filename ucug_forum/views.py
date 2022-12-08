@@ -37,6 +37,7 @@ def edit_forum(request):
     return HttpResponse("Forum {}: \"{}\" edited.".format(forum.id, forum.title))
 
 def create_post(request):
+    record_session(request)
     if request.user.is_authenticated:
         owner = request.user
     else:
