@@ -37,6 +37,7 @@ def edit_forum(request):
     return HttpResponse("Forum {}: \"{}\" edited.".format(forum.id, forum.title))
 
 def create_post(request):
+    record_session(request)
     if request.user.is_authenticated:
         owner = request.user
     else:
@@ -64,6 +65,8 @@ def create_post(request):
                 owner=owner,
                 ip_owner=ip)
     post.save()
+    parent_post.reply_count += 1
+    parent_post.save()
 
     post_data = post.public_data()
     return HttpResponse(json.dumps([post_data]))
@@ -86,6 +89,9 @@ def delete_post(request):
     if not post.owner_id == request.user.id:
         record_session(request, "NO_AUTH")
         return HttpResponse("Nice Try!")
+    if post.parent_post:
+        post.parent_post.reply_count -= 1
+        post.parent_post.save()
     post.delete()
     return HttpResponse("Post deleted.")
 

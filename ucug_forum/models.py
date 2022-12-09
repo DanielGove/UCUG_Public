@@ -11,10 +11,10 @@ class Forum(models.Model):
     created_UTC = models.DateTimeField(auto_now_add=True)
     updated_UTC = models.DateTimeField(auto_now=True)
 
-    owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
     title = models.CharField(max_length=64, default="Null")
-    description = models.CharField(max_length=256)
+    description = models.CharField(max_length=256, null=True, blank=True)
 
     def public_data(self):
         if self.owner.is_superuser:
@@ -39,17 +39,19 @@ class Forum(models.Model):
 
 class Post(models.Model):
     title = models.CharField(max_length=64, default="Null")
-    content = models.TextField()
+    content = models.TextField(null=True, blank=True)
 
     created_UTC = models.DateTimeField(auto_now_add=True)
     updated_UTC = models.DateTimeField(auto_now=True)
 
     mentions = models.ForeignKey('self', related_name="post_mention", on_delete=models.SET_NULL, null=True)
-    parent_forum = models.ForeignKey(Forum, on_delete=models.CASCADE, null=True)
-    parent_post = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
+    parent_forum = models.ForeignKey(Forum, on_delete=models.CASCADE, null=True, blank=True)
+    parent_post = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
 
-    owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    ip_owner = models.GenericIPAddressField(null=True)
+    reply_count = models.SmallIntegerField(null=False, default=0)
+
+    owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    ip_owner = models.GenericIPAddressField(null=True, blank=True)
 
     def public_data(self):
         if self.owner:
@@ -70,11 +72,14 @@ class Post(models.Model):
             "id" : self.id,
             "title" : self.title,
             "content" : self.content,
+            "created" : "%m/%d/%Y".format(self.created_UTC),
             "owner_id" : owner_id,
             "owner_name" : owner_name,
             "owner_class" : owner_class,
+            "owner_url" : "/profile/" + owner_name,
             "parent_post" : self.parent_post.title if self.parent_post else None,
             "parent_forum" : self.parent_forum.title if self.parent_forum else None,
+            "reply_count" : self.reply_count,
         }
         return data
 

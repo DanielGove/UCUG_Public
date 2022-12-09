@@ -15,7 +15,6 @@ class RegisterView(FormView):
     success_url = '/home'
 
     def get(self, request):
-        record_session(request)
         return render(request, self.template_name,
             context={'form': self.form_class()})
 
@@ -67,8 +66,6 @@ def logout_request(request):
     return redirect("/home")
 
 def RequestProfile(request, name):
-    record_session(request)
-
     try:
         profile = User.objects.get(username=name)
     except:
@@ -81,8 +78,6 @@ def RequestProfile(request, name):
 
 def update_profile_description(request):
     if request.method == "POST":
-        description = request.POST.get("description")
-
         # Update the profile decription of the user who made the request.
         try:
             user = User.objects.get(username=request.user.username)
@@ -90,6 +85,7 @@ def update_profile_description(request):
             record_session(request, "NO_AUTH")
             return HttpResponse("Nice try!")
 
+        description = request.POST.get("description")
         if description:
             user.description = description
         else:
@@ -101,14 +97,13 @@ def update_profile_description(request):
 
 def update_profile_image(request):
     if request.method == "POST":
-        image = request.FILES.get("image")
-
         try:
             user = User.objects.get(username=request.user.username)
         except:
             record_session(request, "NO_AUTH")
             return HttpResponse("Nice try!")
-
+        
+        image = request.FILES.get("image")
         if image:
             user.profile_picture = image
         else:
