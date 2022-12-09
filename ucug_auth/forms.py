@@ -6,18 +6,18 @@ from datetime import datetime
 
 class RegisterForm(UserCreationForm):
     password1 = forms.CharField(widget=forms.PasswordInput(attrs={
-        'placeholder': 'Password',
+        'placeholder': 'Confirm Password',
         'class': 'form-control form-control-lg'
     }))
 
     password2 = forms.CharField(widget=forms.PasswordInput(attrs={
-        'placeholder': 'Confirm Password',
+        'placeholder': 'Password',
         'class': 'form-control form-control-lg'
     }))
 
     class Meta:
         model = User
-        fields = ('username', "password1", "password2")
+        fields = ('username', "password2", "password1")
         widgets = {
             'username': forms.TextInput(attrs={
                 'placeholder': 'Username',

@@ -68,7 +68,8 @@ def create_post(request):
     try:
         post.full_clean()
         post.save()
-    except:
+    except Exception as e:
+        print(e)
         record_session(request, "BAD_INPUT")
         return HttpResponse("Bad Input")
 

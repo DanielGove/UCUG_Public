@@ -1,19 +1,15 @@
-Write detailed error message for registration when there is a:
-    invalid password
-    taken username
-
 Build forum pages
     Like/Dislike posts for registered users.
     Reply to posts and replies (mentions).
     Conditional rendering of replies.
     Timestamps for posts and replies.
+    Remodel reply thread for small screen sizes.
 
 Profile pages
     Add a content feed to profile pages (links to posts)
 
 Build post pages.
     Allow update functionality for post title and content
-    Display comments.
     Indicate comment hierarchy.
     Add CRUD functionality for comments
     Order/filter comments

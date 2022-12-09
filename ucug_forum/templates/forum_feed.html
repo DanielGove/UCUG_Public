@@ -245,10 +245,8 @@
                                 <v-icon left>mdi-account</v-icon>[[ child.owner_name ]]
                             </v-chip>
                         </v-cart-title>
-                        <v-card-text style="border: 1px solid white" class="shrink">
-                            <p style="border: 1px solid red; display: inline-block; word-wrap: break-word; max-width: 90%" width="80%">[[child.content]]</p>
-                            <v-btn style="border: 1px solid red;" class="float: right"></v-btn>
-                        </v-card-text>
+                        <v-card-text style="text-wrap: word-break; max-width: 95%">
+                            [[ child.content ]]</v-card-text>
                     </v-card>
                 </v-col>
             </v-row>
