@@ -260,22 +260,15 @@
                         let data = {}
                         data.ordering = this.query_order_by;
                         data.p_forum = this.forum["id"];
-                        data.p_post = null;
+                        data.p_post = data.title = data.content = data.author = null;
                         if (this.query_search_by == "Title & Content") {
                             data.title = this.query_search_term;
                             data.content = this.query_search_term;
-                            data.author = "";
                         } else if (this.query_search_by == "Title") {
                             data.title = this.query_search_term;
-                            data.content = "";
-                            data.author = "";
                         } else if (this.query_search_by == "Content") {
-                            data.title = "";
                             data.content = this.query_search_term;
-                            data.author = "";
                         } else {
-                            data.title = "";
-                            data.content = "";
                             data.author = this.query_search_term;
                         }
 
@@ -285,13 +278,14 @@
 
                         axios.get("/get_posts/", {params: data})
                             .then(res => {
-                                // Display the new posts!
+                                // Display the new posts
                                 this.posts = res.data;
                             })
                             .catch(err => console.log(err))
                     },
                 },
                 mounted() {
+                    // Grab the first posts after loading
                     this.search_posts();
                 },
                 watch: {
