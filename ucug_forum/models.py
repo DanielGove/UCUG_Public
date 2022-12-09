@@ -47,7 +47,7 @@ class Forum(models.Model):
 
 class Post(models.Model):
     title = models.CharField(max_length=64, default="Null")
-    content = models.TextField(null=True, blank=True)
+    content = models.TextField(max_length=1024, null=True, blank=True)
 
     created_UTC = models.DateTimeField(auto_now_add=True)
     updated_UTC = models.DateTimeField(auto_now=True)
@@ -80,7 +80,7 @@ class Post(models.Model):
             "id" : self.id,
             "title" : self.title,
             "content" : self.content,
-            "created" : "%m/%d/%Y".format(self.created_UTC),
+            "created" : self.created_UTC.strftime("%H:%M %m/%d/%y"),
             "owner_id" : owner_id,
             "owner_name" : owner_name,
             "owner_class" : owner_class,

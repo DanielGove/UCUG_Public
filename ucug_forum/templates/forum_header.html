@@ -70,7 +70,7 @@
                         title => (title || '').length <= 64 || "The title can't be longer than 64 characters!",
                     ],
                     content_rules: [
-                        content => (content || '').length <= 256 || "The content can't be longer than 256 characters!",
+                        content => (content || '').length <= 1024 || "The content can't be longer than 256 characters!",
                     ],
 
                     forum: {
@@ -225,6 +225,8 @@
                     },
 
                     create_reply(post) {
+                        if (!this.reply_valid) return false;
+
                         let data = new FormData();
                         data.append("p_forum", null);
                         data.append("p_post", post.id);

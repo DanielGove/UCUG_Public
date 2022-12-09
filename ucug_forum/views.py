@@ -64,9 +64,17 @@ def create_post(request):
                 parent_post=parent_post,
                 owner=owner,
                 ip_owner=ip)
-    post.save()
-    parent_post.reply_count += 1
-    parent_post.save()
+    
+    try:
+        post.full_clean()
+        post.save()
+    except:
+        record_session(request, "BAD_INPUT")
+        return HttpResponse("Bad Input")
+
+    if parent_post:
+        parent_post.reply_count += 1
+        parent_post.save()
 
     post_data = post.public_data()
     return HttpResponse(json.dumps([post_data]))
@@ -79,7 +87,13 @@ def edit_post(request):
     
     post.title = request.POST["title"]
     post.content = request.POST["content"]
-    post.save()
+
+    try:
+        post.full_clean()
+        post.save()
+    except:
+        record_session(request, "BAD_INPUT")
+        return HttpResponse("Bad Input")
 
     print(request.POST)
     return HttpResponse(json.dumps(post.public_data()))

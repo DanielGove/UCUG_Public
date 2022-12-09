@@ -30,6 +30,7 @@ class Session(models.Model):
     MESSAGES = (
         ('NONE', ''),
         ('NO_AUTH', 'NO_AUTH'),
+        ('BAD_INPUT', 'BAD_INPUT'),
     )
     message = models.CharField(
         max_length=16,

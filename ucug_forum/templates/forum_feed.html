@@ -51,8 +51,7 @@
                             :rules="title_rules"></v-text-field>
                 <v-textarea v-model="edit_forum_description"
                             label="Description"
-                            placeholder="Description"
-                            :rules="content_rules"></v-textarea>
+                            placeholder="Description"></v-textarea>
             </v-form>
         </v-card-text>
 
@@ -139,17 +138,17 @@
         <v-card-title>
             [[ post.title ]]
             <v-spacer></v-spacer>
-
+            <small>[[ post.created ]]</small>
             <!-- Owner Tag -->
-            <v-chip v-if="post.owner_class == 'super'" 
+            <v-chip v-if="post.owner_class == 'super'"  class="ml-1"
                 :href="post.owner_url" color="orange" text-color="white">
                 <v-icon left>mdi-shield-star</v-icon>[[ post.owner_name ]]
             </v-chip>
-            <v-chip v-if="post.owner_class == 'staff'"
+            <v-chip v-if="post.owner_class == 'staff'" class="ml-1"
                 :href="post.owner_url" color="success" text-color="white">
                 <v-icon left>mdi-shield-account</v-icon>[[ post.owner_name ]]
             </v-chip>
-            <v-chip v-if="post.owner_class == 'user' && post.owner_id"
+            <v-chip v-if="post.owner_class == 'user' && post.owner_id" class="ml-1"
                 :href="post.owner_url" color="info" text-color="white">
                 <v-icon left>mdi-account</v-icon>[[ post.owner_name ]]
             </v-chip>
@@ -229,23 +228,27 @@
                         style="text-decoration: none;
                                 background-color: rgb(39,86,139)">
                         <v-card-title>
-                            [[child.title]]
+                            [[ child.title ]]
                             <v-spacer></v-spacer>
+                            <small>[[ child.created ]]</small>
                             <!-- Owner Tag -->
-                            <v-chip v-if="child.owner_class == 'super'" 
+                            <v-chip v-if="child.owner_class == 'super'" class="ml-1"
                                 :href="child.owner_url" color="orange" text-color="white">
                                 <v-icon left>mdi-shield-star</v-icon>[[ child.owner_name ]]
                             </v-chip>
-                            <v-chip v-if="child.owner_class == 'staff'"
+                            <v-chip v-if="child.owner_class == 'staff'" class="ml-1"
                                 :href="child.owner_url" color="success" text-color="white">
                                 <v-icon left>mdi-shield-account</v-icon>[[ child.owner_name ]]
                             </v-chip>
-                            <v-chip v-if="child.owner_class == 'user' && child.owner_id"
+                            <v-chip v-if="child.owner_class == 'user' && child.owner_id" class="ml-1"
                                 :href="child.owner_url" color="info" text-color="white">
                                 <v-icon left>mdi-account</v-icon>[[ child.owner_name ]]
                             </v-chip>
                         </v-cart-title>
-                        <v-card-text>[[child.content]]</v-card-text>
+                        <v-card-text style="border: 1px solid white" class="shrink">
+                            <p style="border: 1px solid red; display: inline-block; word-wrap: break-word; max-width: 90%" width="80%">[[child.content]]</p>
+                            <v-btn style="border: 1px solid red;" class="float: right"></v-btn>
+                        </v-card-text>
                     </v-card>
                 </v-col>
             </v-row>
