@@ -209,7 +209,7 @@
 
             <!-- Generic Options -->
             <v-btn v-if="post.id != reply_id" color="info" @click="toggle_reply_form(post)"><v-icon>mdi-reply-all</v-icon>Reply</v-btn>
-            <v-btn small fab color="info" @click="expand_post(post.id)"><v-icon>mdi-chevron-double-down</v-icon></v-btn>
+            <v-btn small fab color="info" @click="expand_post(post.id)"><v-icon>mdi-chevron-double-down</v-icon>[[post.reply_count]]</v-btn>
         </v-card-actions>
 
         <!-- Expanded Content -->

@@ -241,12 +241,6 @@
                             .catch(err => console.log(err))
                     },
 
-                    build_post_data(posts) {
-                        posts.forEach(function (post, index) {
-                            post.owner_url = "/profile/" + post.owner_name;
-                        });
-                        return posts;
-                    },
                     expand_post(post_id, force=false) {
                         if (post_id == this.expanded_id && !force) {
                             this.expanded_id = 0;
@@ -257,7 +251,7 @@
                         axios.get("/get_posts/", {params: {p_post: post_id}})
                             .then(res => {
                                 this.expanded_id = post_id;
-                                this.expanded_children = this.build_post_data(res.data);
+                                this.expanded_children = res.data;
                             })
                             .catch(err => {console.log(err);console.log("Could not expand post.");})
                         return 0;
@@ -292,7 +286,7 @@
                         axios.get("/get_posts/", {params: data})
                             .then(res => {
                                 // Display the new posts!
-                                this.posts = this.build_post_data(res.data);
+                                this.posts = res.data;
                             })
                             .catch(err => console.log(err))
                     },
