@@ -209,16 +209,45 @@
 
             <!-- Generic Options -->
             <v-btn v-if="post.id != reply_id" color="info" @click="toggle_reply_form(post)"><v-icon>mdi-reply-all</v-icon>Reply</v-btn>
-            <v-btn small fab color="info" @click="expand_post(post)"><v-icon>mdi-chevron-double-down</v-icon></v-btn>
+            <v-btn small fab color="info" @click="expand_post(post.id)"><v-icon>mdi-chevron-double-down</v-icon></v-btn>
         </v-card-actions>
 
         <!-- Expanded Content -->
-        <v-card-text v-if="post.expanded">
-            <v-card-title v-if="post.children.length == 0">
+        <v-card-text v-if="post.id == expanded_id">
+            <v-card-title v-if="expanded_children.length == 0">
             Nothing to see here.
             </v-card-title>
-            <v-row v-for="child in post.children" :key="child.id">
-            [[child.title]]
+            <!-- Render replies -->
+            <v-row v-for="child in expanded_children" :key="child.id">
+                <v-col cols="3">
+                    ACTIONS
+                </v-col>
+                <v-col cols="9">
+                    <v-card dark
+                        elevation="6"
+                        class="rounded-lg"
+                        style="text-decoration: none;
+                                background-color: rgb(39,86,139)">
+                        <v-card-title>
+                            [[child.title]]
+                            <v-spacer></v-spacer>
+                            <!-- Owner Tag -->
+                            <v-chip v-if="child.owner_class == 'super'" 
+                                :href="child.owner_url" color="orange" text-color="white">
+                                <v-icon left>mdi-shield-star</v-icon>[[ child.owner_name ]]
+                            </v-chip>
+                            <v-chip v-if="child.owner_class == 'staff'"
+                                :href="child.owner_url" color="success" text-color="white">
+                                <v-icon left>mdi-shield-account</v-icon>[[ child.owner_name ]]
+                            </v-chip>
+                            <v-chip v-if="child.owner_class == 'user' && child.owner_id"
+                                :href="child.owner_url" color="info" text-color="white">
+                                <v-icon left>mdi-account</v-icon>[[ child.owner_name ]]
+                            </v-chip>
+                        </v-cart-title>
+                        <v-card-text>[[child.content]]</v-card-text>
+                    </v-card>
+                </v-col>
             </v-row>
         </v-card-text>
     </v-card>

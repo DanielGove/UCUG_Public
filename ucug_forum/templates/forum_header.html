@@ -87,10 +87,14 @@
                     edit_forum_title: "",
                     edit_forum_description: "",
 
+                    expanded_id: 0,
+                    expanded_children: [],
+
                     reply_valid: false,
                     reply_id: 0,
                     reply_title: "",
                     reply_content: "",
+
                     edit_post_valid: false,
                     edit_post_id: 0,
                     edit_post_title: "",
@@ -230,7 +234,7 @@
 
                         axios.post({% url 'create_post' %}, data)
                             .then(res => {
-                                this.expand_post(post, true);
+                                this.expand_post(post.id, true);
                                 this.reply_id = 0;
                                 console.log("Reply Successful.")
                             })
@@ -240,23 +244,20 @@
                     build_post_data(posts) {
                         posts.forEach(function (post, index) {
                             post.owner_url = "/profile/" + post.owner_name;
-                            post.reply = false;
-                            post.expanded = false;
-                            post.children = [];
                         });
                         return posts;
                     },
-                    expand_post(post, force=false) {
-                        if (post.expanded && !force) {
-                            post.expanded = false;
-                            return 0
+                    expand_post(post_id, force=false) {
+                        if (post_id == this.expanded_id && !force) {
+                            this.expanded_id = 0;
+                            return 0;
                         }
 
                         // Grab children posts.
-                        axios.get("/get_posts/", {params: {p_post: post.id}})
+                        axios.get("/get_posts/", {params: {p_post: post_id}})
                             .then(res => {
-                                post.expanded = true;
-                                post.children = this.build_post_data(res.data);
+                                this.expanded_id = post_id;
+                                this.expanded_children = this.build_post_data(res.data);
                             })
                             .catch(err => {console.log(err);console.log("Could not expand post.");})
                         return 0;
