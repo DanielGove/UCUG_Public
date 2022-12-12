@@ -47,6 +47,8 @@
         </v-app>
 
         <script type="text/javascript">
+            axios.defaults.xsrfCookieName = 'csrftoken';
+            axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN';
             vue = new Vue({
                 el: '#app',
                 vuetify: new Vuetify(),
@@ -101,9 +103,12 @@
                     edit_post_content: "",
                     posts: [],
 
+                    like_alert: false,
+
                     order_by: [
                         "Most Recent",
                         "Oldest",
+                        "Most Liked",
                     ],
                     search_by: [
                         "Title & Content",
@@ -222,6 +227,23 @@
                             }
                         }
                         Vue.delete(this.posts, index)
+                    },
+                    like_post(post) {
+
+
+                        axios.post("/like_post/" + post.id + "/")
+                            .then(res => {
+                                if (res.data == "LIKED") {
+                                    post.like_count += 1;
+                                    post.liked_by_user = true;
+                                } else if (res.data == "UNLIKED") {
+                                    post.like_count -= 1;
+                                    post.liked_by_user = false;
+                                } else {
+                                    this.like_alert = true;
+                                }
+                            })
+                            .catch(err => console.log(err))
                     },
 
                     create_reply(post) {

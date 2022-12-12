@@ -138,6 +138,11 @@
         <v-card-title>
             [[ post.title ]]
             <v-spacer></v-spacer>
+            <v-chip @click="like_post(post)"
+                color="info" class="mr-1">[[post.like_count]]
+                <v-icon small right v-if="post.liked_by_user">mdi-thumb-up</v-icon>
+                <v-icon small right v-else>mdi-thumb-up-outline</v-icon>
+            </v-chip>
             <small>[[ post.created ]]</small>
             <!-- Owner Tag -->
             <v-chip v-if="post.owner_class == 'super'"  class="ml-1"
@@ -230,6 +235,11 @@
                         <v-card-title>
                             [[ child.title ]]
                             <v-spacer></v-spacer>
+                            <v-chip @click="like_post(child)"
+                                color="info" class="mr-1">[[child.like_count]]
+                                <v-icon small right v-if="child.liked_by_user">mdi-thumb-up</v-icon>
+                                <v-icon small right v-else>mdi-thumb-up-outline</v-icon>
+                            </v-chip>
                             <small>[[ child.created ]]</small>
                             <!-- Owner Tag -->
                             <v-chip v-if="child.owner_class == 'super'" class="ml-1"
@@ -245,8 +255,7 @@
                                 <v-icon left>mdi-account</v-icon>[[ child.owner_name ]]
                             </v-chip>
                         </v-cart-title>
-                        <v-card-text style="text-wrap: word-break; max-width: 95%">
-                            [[ child.content ]]</v-card-text>
+                        <v-card-text>[[ child.content ]]</v-card-text>
                     </v-card>
                 </v-col>
             </v-row>

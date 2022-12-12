@@ -111,24 +111,25 @@ def delete_post(request):
     return HttpResponse("Post deleted.")
 
 def like_post(request, id):
-    if not request.user.is_authenticated():
-        return HttpResponse("Invalid Request")
+    if not request.user.is_authenticated:
+        record_session(request, "NO_AUTH")
+        return HttpResponse("LOGIN")
 
     post = Post.objects.get(id=id)
 
     if Like.objects.filter(user=request.user.id, post=id).exists():
-        # Unlike the post.
+        # If the user already likes the post, unlike it.
         post.like_count -= 1
         Like.objects.filter(user=request.user.id, post=id).delete()
         post.save()
-        return HttpResponse("Post Liked")
+        return HttpResponse("UNLIKED")
     else:
         # Like the post
         post.like_count += 1
         like = Like(user=request.user.id, post=id)
         post.save()
         like.save()
-        return HttpResponse("Post Unliked")
+        return HttpResponse("LIKED")
 
 
 def get_posts_view(request):
@@ -139,7 +140,7 @@ def get_posts_view(request):
         request.GET.get("author"),
         request.GET.get("p_forum"),
         request.GET.get("p_post"))
-    return HttpResponse(json.dumps([post.public_data() for post in raw_post_data]))
+    return HttpResponse(json.dumps([post.public_data(request.user) for post in raw_post_data]))
 
 def forum_feed(request, title=None, id=None):
     record_session(request)
