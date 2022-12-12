@@ -75,7 +75,7 @@
                     profile_description: "{{ profile.description|escapejs }}",
                     profile_description_input: "",
                     description_rules: [
-                        value => (value || '').length <= 255 || 'Description must be 255 characters or less!',
+                        value => (value || '').length <= 256 || 'Description must be 256 characters or less!',
                     ],
                 }),
                 methods: {

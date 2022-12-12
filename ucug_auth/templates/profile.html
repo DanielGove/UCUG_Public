@@ -40,8 +40,11 @@
             </v-chip>
             {% endif %}
         </v-list-item>
-        <v-list-item class="text-break">
+        <v-list-item class="text-break" v-if="profile_description">
             [[ profile_description ]]
+        </v-list-item>
+        <v-list-item class="text-break" v-else>
+            <i>No Description Provided.</i>
         </v-list-item>
     </v-card>
     </v-col>

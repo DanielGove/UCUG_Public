@@ -86,14 +86,15 @@ def update_profile_description(request):
             return HttpResponse("Nice try!")
 
         description = request.POST.get("description")
-        if description:
-            user.description = description
-        else:
-            user.description = "No description provided."
+        user.description = description
 
-        user.save()
-
-        return HttpResponse(user.description)
+        # Make sure the new data is valid.
+        try:
+            user.full_clean()
+            user.save()
+            return HttpResponse(user.description)
+        except Exception:
+            return HttpResponse("Bad Description.")
 
 def update_profile_image(request):
     if request.method == "POST":

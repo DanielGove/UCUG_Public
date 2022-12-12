@@ -57,6 +57,7 @@ class Post(models.Model):
     parent_post = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
 
     reply_count = models.SmallIntegerField(null=False, default=0)
+    like_count = models.SmallIntegerField(null=False, default=0)
 
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     ip_owner = models.GenericIPAddressField(null=True, blank=True)
@@ -87,6 +88,7 @@ class Post(models.Model):
             "owner_url" : "/profile/" + owner_name,
             "parent_post" : self.parent_post.title if self.parent_post else None,
             "parent_forum" : self.parent_forum.title if self.parent_forum else None,
+            "like_count" : self.like_count,
             "reply_count" : self.reply_count,
         }
         return data
@@ -134,26 +136,14 @@ def get_posts(ordering="Most Recent", title=None, content=None, author=None, p_f
 
     return posts
 
-class Comment(models.Model):
-    content = models.TextField()
+class Like(models.Model):
+    class Meta:
+        unique_together = (("user", "post"))
+
+    user = models.IntegerField(primary_key=True)
+    post = models.IntegerField()
 
     created_UTC = models.DateTimeField(auto_now_add=True)
-    updated_UTC = models.DateTimeField(auto_now=True)
-
-    parent_post = models.ForeignKey(Post, null=True, blank=True, on_delete=models.SET_NULL)
-    parent_comment = models.ForeignKey("Comment", null=True, blank=True, on_delete=models.SET_NULL)
-
-    owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    ip_owner = models.GenericIPAddressField(null=True)
-
-    def public_data(self):
-        data = {
-            "id" : self.id,
-            "content" : self.content,
-            "owner" : self.owner,
-            "post" : self.parent
-        }
-        return data
 
     def __str__(self):
-        return self.content[:24]
+        return f"{self.user.username} -> {self.post.id}"

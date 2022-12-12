@@ -26,11 +26,11 @@ class UserManager(BaseUserManager):
         return self.create_user(username, password, **other)
 
 class User(AbstractBaseUser, PermissionsMixin):
-    username = models.CharField(_('username'), max_length=64, unique=True, null=True)
+    username = models.CharField(_('username'), max_length=32, unique=True, null=True)
     is_superuser = models.BooleanField(_('superuser'), default=False)
     is_staff = models.BooleanField(_('staff'), default=False)
 
-    description = models.CharField(_('description'), max_length=255, 
+    description = models.CharField(_('description'), max_length=256,
                                     default='', blank=True)
     profile_picture = models.ImageField(_('picture'), default="default.png",
                                         upload_to="profile_pics", blank=True)

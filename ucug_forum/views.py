@@ -3,7 +3,7 @@ from django.shortcuts import render
 import json
 
 from UCUG.models import record_session
-from ucug_forum.models import Forum, Post, get_posts
+from ucug_forum.models import Forum, Post, Like, get_posts
 
 def create_forum(request):
     # Check if the user can make forums
@@ -109,6 +109,27 @@ def delete_post(request):
         post.parent_post.save()
     post.delete()
     return HttpResponse("Post deleted.")
+
+def like_post(request, id):
+    if not request.user.is_authenticated():
+        return HttpResponse("Invalid Request")
+
+    post = Post.objects.get(id=id)
+
+    if Like.objects.filter(user=request.user.id, post=id).exists():
+        # Unlike the post.
+        post.like_count -= 1
+        Like.objects.filter(user=request.user.id, post=id).delete()
+        post.save()
+        return HttpResponse("Post Liked")
+    else:
+        # Like the post
+        post.like_count += 1
+        like = Like(user=request.user.id, post=id)
+        post.save()
+        like.save()
+        return HttpResponse("Post Unliked")
+
 
 def get_posts_view(request):
     raw_post_data = get_posts(
