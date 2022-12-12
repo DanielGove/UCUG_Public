@@ -1,16 +1,17 @@
 Build forum pages
-    Like/Dislike posts for registered users.
-    Reply to posts and replies (mentions).
-    Conditional rendering of replies.
-    Timestamps for posts and replies.
-    Remodel reply thread for small screen sizes.
+    Reply to posts and replies (mentions)
+    Remodel reply thread for small screen sizes
+    CRUD functionality for expanded content
 
 Profile pages
     Add a content feed to profile pages (links to posts)
 
 Build post pages.
     Allow update functionality for post title and content
-    Indicate comment hierarchy.
+    Indicate comment hierarchy. (mentions)
     Add CRUD functionality for comments
     Order/filter comments
     Add like/dislike functionality on comments for registered users
+
+Settings:
+    download pythonanywhere functional settings.py
