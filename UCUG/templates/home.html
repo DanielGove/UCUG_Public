@@ -79,48 +79,46 @@
 </v-row>
 
 <!-- Are there any announcements? -->
-<div id="announcement_list" class="mt-2">
-    <v-row v-for="announcement in announcements" :key="announcement.title">
-        <v-card outlined
-                width="100%"
-                elevation=6
-                class="ma-2 rounded-lg"
-                style="border-left: 8px solid rgb(39,86,139)">
-            <v-card-title>
-                [[ announcement.title ]]
-                <v-spacer></v-spacer>
-                <!-- Author Tag -->
-                <v-chip v-if="announcement.author_class == 'super'" 
-                    :href="announcement.author_url" color="orange" text-color="white">
-                    <v-icon left>mdi-shield-star</v-icon>[[ announcement.author_name ]]
-                </v-chip>
-                <v-chip v-if="announcement.author_class == 'staff'"
-                    :href="announcement.author_url" color="success" text-color="white">
-                    <v-icon left>mdi-shield-account</v-icon>[[ announcement.author_name ]]
-                </v-chip>
-                <v-chip v-if="announcement.author_class == 'user'"
-                    :href="announcement.author_url" color="info" text-color="white">
-                    <v-icon left>mdi-account</v-icon>[[ announcement.author_name ]]
-                </v-chip>
-            </v-card-title>
+<v-row v-for="announcement in announcements" :key="announcement.title" class="mb-1">
+    <v-card outlined
+            width="100%"
+            elevation=6
+            class="ma-2 rounded-lg"
+            style="border-left: 8px solid rgb(39,86,139)">
+        <v-card-title>
+            [[ announcement.title ]]
+            <v-spacer></v-spacer>
+            <!-- Author Tag -->
+            <v-chip v-if="announcement.author_class == 'super'" 
+                :href="announcement.author_url" color="orange" text-color="white">
+                <v-icon left>mdi-shield-star</v-icon>[[ announcement.author_name ]]
+            </v-chip>
+            <v-chip v-if="announcement.author_class == 'staff'"
+                :href="announcement.author_url" color="success" text-color="white">
+                <v-icon left>mdi-shield-account</v-icon>[[ announcement.author_name ]]
+            </v-chip>
+            <v-chip v-if="announcement.author_class == 'user'"
+                :href="announcement.author_url" color="info" text-color="white">
+                <v-icon left>mdi-account</v-icon>[[ announcement.author_name ]]
+            </v-chip>
+        </v-card-title>
 
-            <v-card-text>
-                [[ announcement.content ]]
-            </v-card-text>
+        <v-card-text>
+            [[ announcement.content ]]
+        </v-card-text>
 
-            <v-card-actions v-if="announcement.can_edit">
-                <v-spacer></v-spacer>
-                <v-btn v-on:click="toggle_announcement_edit_form(announcement.id)" small class="mx-1" fab color="info"><v-icon>mdi-pencil</v-icon></v-btn>
-                <v-btn v-on:click="delete_announcement(announcement.id)" small class="mx-1" fab color="error"><v-icon>mdi-delete</v-icon></v-btn>
-            </v-card-actions>
-        </v-card>
-    </v-row>
-</div>
+        <v-card-actions v-if="announcement.can_edit">
+            <v-spacer></v-spacer>
+            <v-btn v-on:click="toggle_announcement_edit_form(announcement.id)" small class="mx-1" fab color="info"><v-icon>mdi-pencil</v-icon></v-btn>
+            <v-btn v-on:click="delete_announcement(announcement.id)" small class="mx-1" fab color="error"><v-icon>mdi-delete</v-icon></v-btn>
+        </v-card-actions>
+    </v-card>
+</v-row>
 
 <v-divider></v-divider>
 
 <!-- Display forum creation form here -->
-<v-row v-if="forum_create_form">
+<v-row v-if="forum_create_form" class="mt-1">
     <v-card width="100%"
             class="ma-2"
             elevation=6
@@ -151,7 +149,7 @@
 </v-row>
 
 <!-- Display each forum -->
-<v-row v-for="forum in forums" :key="forum.title">
+<v-row v-for="forum in forums" :key="forum.title" class="mt-1">
     <v-hover v-slot="{ hover }"/>
     <v-card outlined
             width="100%"
