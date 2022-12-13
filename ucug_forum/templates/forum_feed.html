@@ -2,6 +2,13 @@
 
 {% block content %}
 
+<v-overlay :value="like_alert">
+    <v-card-title>
+        You need to be logged in to like posts!
+        <v-btn small fab class="ml-1" @click="like_alert=false"><v-icon>mdi-close</v-icon></v-btn>
+    </v-card-title>
+</v-overlay>
+
 <!-- Title Tag, like on the home page. -->
 <v-row id="forum_header" class="mt-1 mb-1">
     <v-card outlined

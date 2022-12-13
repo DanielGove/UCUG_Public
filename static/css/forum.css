@@ -1,12 +1,3 @@
 .query_button_highlight {
     background-color: rgba(39,86,139, 0.3);
 }
-
-.v_alert {
-    position: fixed;
-    left: 50%;
-    top: 150px;
-    transform: translate(-50%, -50%);
-    margin: 0 auto;
-    max-width: 500px;
-}
