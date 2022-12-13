@@ -27,7 +27,8 @@
              such as the navbar. Without this tag, the content would be hidden under
              the nav bar. -->
 
-        <v-app id="app">
+        <v-app id="app" style="positon: relative">
+            <v-alert dismissible v-if="like_alert" type="error">You must be logged in to like posts!</v-alert>
             {% include "navbar.html" %}
 
             <v-main>
@@ -229,7 +230,9 @@
                         Vue.delete(this.posts, index)
                     },
                     like_post(post) {
-
+                        if ("{{ user.is_authenticated }}" == "False") {
+                            this.like_alert = true;
+                        }
 
                         axios.post("/like_post/" + post.id + "/")
                             .then(res => {
@@ -242,10 +245,10 @@
                                 } else {
                                     this.like_alert = true;
                                 }
+                                return true;
                             })
                             .catch(err => console.log(err))
                     },
-
                     create_reply(post) {
                         if (!this.reply_valid) return false;
 
@@ -264,7 +267,6 @@
                             })
                             .catch(err => console.log(err))
                     },
-
                     expand_post(post_id, force=false) {
                         if (post_id == this.expanded_id && !force) {
                             this.expanded_id = 0;
@@ -307,6 +309,12 @@
                             })
                             .catch(err => console.log(err))
                     },
+                    scroll_to_post(post_id) {
+                        post = document.getElementById("post_" + post_id);
+                        if (post) {
+                            post.scrollIntoView();
+                        }
+                    }
                 },
                 mounted() {
                     // Grab the first posts after loading

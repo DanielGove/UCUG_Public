@@ -134,7 +134,8 @@
             elevation="6"
             class="rounded-lg"
             style="text-decoration: none;
-                    border-left: 8px solid rgb(39,86,139)">
+                    border-left: 8px solid rgb(39,86,139)"
+            :id="'post_' + post.id">
         <v-card-title>
             [[ post.title ]]
             <v-spacer></v-spacer>
@@ -231,7 +232,8 @@
                         elevation="6"
                         class="rounded-lg"
                         style="text-decoration: none;
-                                background-color: rgb(39,86,139)">
+                                background-color: rgb(39,86,139)"
+                        :id="'post_' + child.id">
                         <v-card-title>
                             [[ child.title ]]
                             <v-spacer></v-spacer>
